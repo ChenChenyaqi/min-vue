@@ -1,5 +1,6 @@
 import { extend } from "../shared"
 
+const effectStack: ReactiveEffect[] = []
 class ReactiveEffect {
   private _fn: any
   // 是否没有stop过
@@ -14,8 +15,11 @@ class ReactiveEffect {
 
   run() {
     activeEffect = this
+    cleanupEffect(this)
+    effectStack.push(this)
     const res = this._fn()
-    activeEffect = null
+    effectStack.pop()
+    activeEffect = effectStack[effectStack.length - 1]
     return res
   }
   stop() {
@@ -33,6 +37,7 @@ function cleanupEffect(effect: ReactiveEffect) {
   effect.deps.forEach((dep: Set<ReactiveEffect>) => {
     dep.delete(effect)
   })
+  effect.deps.length = 0
 }
 
 // 当前的副作用函数
@@ -50,6 +55,9 @@ export function trick(target, key) {
   let depsSet = depsMap.get(key)
   if (!depsSet) {
     depsMap.set(key, (depsSet = new Set()))
+  }
+  if (depsSet.has(activeEffect)) {
+    return
   }
   depsSet.add(activeEffect)
   // 反向收集，用于实现stop

@@ -9,15 +9,16 @@ describe("effect", () => {
 
     let nextAge
     effect(() => {
-      user.age++
       nextAge = user.age
     })
 
-    expect(nextAge).toBe(11)
+    expect(nextAge).toBe(10)
 
     // update
     user.age++
-    expect(nextAge).toBe(13)
+    expect(nextAge).toBe(11)
+    user.age++
+    expect(nextAge).toBe(12)
   })
 
   it("当调用effect的时候应该return一个runner，runner就是传给effect的函数，并且runner执行结果是函数里的返回值", () => {
@@ -80,11 +81,52 @@ describe("effect", () => {
     expect(dummy).toBe(2)
 
     stop(runner)
+    obj.prop++
     obj.prop = 3
     expect(dummy).toBe(2)
     expect(onStop).toHaveBeenCalledTimes(1)
 
     runner()
     expect(dummy).toBe(3)
+  })
+
+  it("嵌套effect", () => {
+    const data = { foo: true, bar: true }
+    const obj = reactive(data)
+    let temp1, temp2
+    const effectFn1 = jest.fn()
+    const effectFn2 = jest.fn()
+    effect(() => {
+      effect(() => {
+        temp2 = obj.bar
+        effectFn2()
+      })
+      temp1 = obj.foo
+      effectFn1()
+    })
+
+    obj.bar = false
+    expect(effectFn1).toHaveBeenCalledTimes(1)
+    expect(effectFn2).toHaveBeenCalledTimes(2)
+  })
+
+  it("嵌套effect", () => {
+    const data = { foo: true, bar: true }
+    const obj = reactive(data)
+    let temp1, temp2
+    const effectFn1 = jest.fn()
+    const effectFn2 = jest.fn()
+    effect(() => {
+      effect(() => {
+        temp2 = obj.bar
+        effectFn2()
+      })
+      temp1 = obj.foo
+      effectFn1()
+    })
+
+    obj.foo = false
+    expect(effectFn1).toHaveBeenCalledTimes(2)
+    expect(effectFn2).toHaveBeenCalledTimes(2)
   })
 })
