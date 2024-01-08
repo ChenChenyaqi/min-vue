@@ -1,7 +1,7 @@
 import { extend } from "../shared"
 
 const effectStack: ReactiveEffect[] = []
-class ReactiveEffect {
+export class ReactiveEffect {
   private _fn: any
   // 是否没有stop过
   private active: boolean = true
