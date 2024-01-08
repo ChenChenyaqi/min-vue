@@ -1,5 +1,5 @@
-export function extend(origin, target) {
-  Object.assign(origin, target)
+export function extend(origin, ...target) {
+  return Object.assign(origin, ...target)
 }
 
 export function isObject(value) {

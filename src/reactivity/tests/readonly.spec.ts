@@ -1,4 +1,4 @@
-import { readonly, isReadonly } from "../reactive"
+import { readonly, isReadonly, isProxy } from "../reactive"
 
 describe("readonly", () => {
   it("readonly只读不可写", () => {
@@ -7,6 +7,7 @@ describe("readonly", () => {
     const wrapped = readonly(original)
     expect(wrapped).not.toBe(original)
     expect(wrapped.foo).toBe(1)
+    expect(isProxy(wrapped)).toBe(true)
 
     // readonly 不可写
     wrapped.foo = 2
