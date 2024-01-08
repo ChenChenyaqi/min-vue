@@ -1,5 +1,5 @@
 import { extend, isObject } from "../shared"
-import { trick, trigger } from "./effect"
+import { track, trigger } from "./effect"
 import { ReactiveFlags, reactive, readonly } from "./reactive"
 
 const get = createGetter()
@@ -22,7 +22,7 @@ function createGetter(isReadonly: boolean = false, shallow: boolean = false) {
     }
 
     if (!isReadonly) {
-      trick(target, key)
+      track(target, key)
     }
 
     if (isObject(res)) {

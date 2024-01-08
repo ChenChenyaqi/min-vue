@@ -44,7 +44,7 @@ function cleanupEffect(effect: ReactiveEffect) {
 let activeEffect: null | ReactiveEffect = null
 // 收集effect函数
 const bucket = new WeakMap()
-export function trick(target, key) {
+export function track(target, key) {
   if (!activeEffect) {
     return
   }
@@ -55,6 +55,13 @@ export function trick(target, key) {
   let depsSet = depsMap.get(key)
   if (!depsSet) {
     depsMap.set(key, (depsSet = new Set()))
+  }
+  trackEffect(depsSet)
+}
+
+export function trackEffect(depsSet) {
+  if (!activeEffect) {
+    return
   }
   if (depsSet.has(activeEffect)) {
     return
@@ -70,6 +77,10 @@ export function trigger(target, key) {
     return
   }
   const depsSet = depsMap.get(key)
+  triggerEffect(depsSet)
+}
+
+export function triggerEffect(depsSet: any) {
   const effectToRun = new Set<ReactiveEffect>()
   depsSet &&
     depsSet.forEach((effect: ReactiveEffect) => {
