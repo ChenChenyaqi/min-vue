@@ -9,3 +9,13 @@ export function isObject(value) {
 export function hasChanged(value, newValue) {
   return !Object.is(value, newValue)
 }
+
+export function convertStringToHTMLElement(
+  rootContainer: string | Element
+): Element {
+  let rootElement = rootContainer
+  if (typeof rootContainer === "string") {
+    rootElement = document.querySelector(rootContainer) as Element
+  }
+  return rootElement as Element
+}
