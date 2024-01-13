@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "rollup -c rollup.config.js"
+    "build": "rollup -c rollup.config.ts --configPlugin typescript"
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",

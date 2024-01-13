@@ -1,7 +1,7 @@
-const RollupPluginTypescript = require("@rollup/plugin-typescript")
+import RollupPluginTypescript from "@rollup/plugin-typescript"
 
 /** @type {import('rollup'.RollupOptions)} */
-module.exports = {
+export default {
   input: "./src/index.ts",
   output: [
     {
