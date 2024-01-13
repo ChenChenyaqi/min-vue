@@ -1,4 +1,5 @@
 import RollupPluginTypescript from "@rollup/plugin-typescript"
+import { RollupOptions } from "rollup"
 
 /** @type {import('rollup'.RollupOptions)} */
 export default {
@@ -7,11 +8,13 @@ export default {
     {
       format: "cjs",
       file: "lib/guide-min-vue.cjs.js",
+      sourcemap: "inline",
     },
     {
       format: "es",
       file: "lib/guide-min-vue.esm.js",
+      sourcemap: "inline",
     },
   ],
   plugins: [RollupPluginTypescript()],
-}
+} as RollupOptions
