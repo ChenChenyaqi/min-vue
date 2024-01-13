@@ -1,4 +1,14 @@
-export function createComponentInstance(vnode) {
+import { Component } from "./h"
+import { VNode } from "./vnode"
+
+export interface ComponentInstance {
+  vnode: VNode
+  type: VNode["type"]
+  setupState?: object
+  render?: Component["render"]
+}
+
+export function createComponentInstance(vnode: VNode): ComponentInstance {
   const component = {
     vnode,
     type: vnode.type,
@@ -7,15 +17,15 @@ export function createComponentInstance(vnode) {
   return component
 }
 
-export function setupComponent(instance) {
+export function setupComponent(instance: ComponentInstance) {
   // initProps()
   // initSlots()
 
   setupStatefulComponent(instance)
 }
 
-function setupStatefulComponent(instance) {
-  const Component = instance.type
+function setupStatefulComponent(instance: ComponentInstance) {
+  const Component = instance.type as Component
 
   const { setup } = Component
 
@@ -27,7 +37,7 @@ function setupStatefulComponent(instance) {
   }
 }
 
-function handleSetupResult(instance, setupResult) {
+function handleSetupResult(instance: ComponentInstance, setupResult: object) {
   // TODO function
 
   if (typeof setupResult === "object") {
@@ -37,7 +47,7 @@ function handleSetupResult(instance, setupResult) {
   finishComponentSetup(instance)
 }
 
-function finishComponentSetup(instance) {
-  const Component = instance.type
+function finishComponentSetup(instance: ComponentInstance) {
+  const Component = instance.type as Component
   instance.render = Component.render
 }

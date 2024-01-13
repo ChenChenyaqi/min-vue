@@ -1,8 +1,9 @@
 import { convertStringToHTMLElement } from "../shared/index"
+import { Component } from "./h"
 import { render } from "./renderer"
 import { createVNode } from "./vnode"
 
-export function createApp(rootComponent) {
+export function createApp(rootComponent: Component) {
   return {
     mount(_rootContainer: string | Element) {
       const vnode = createVNode(rootComponent)
