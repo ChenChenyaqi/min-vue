@@ -4,6 +4,7 @@ export interface VNode {
   type: string | Component
   props: object
   children: VNode[] | string
+  el: Element | null
 }
 
 export function createVNode(
@@ -15,6 +16,7 @@ export function createVNode(
     type,
     props: props || {},
     children: children || [],
+    el: null,
   }
 
   return vnode

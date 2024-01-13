@@ -23,9 +23,11 @@ function processElement(vnode: VNode, container: Element) {
   mountElement(vnode, container)
 }
 
-function mountElement(vnode: VNode, container: Element) {
-  const el = document.createElement(vnode.type as string)
-  const { children, props } = vnode
+function mountElement(initialVnode: VNode, container: Element) {
+  const el = (initialVnode.el = document.createElement(
+    initialVnode.type as string
+  ))
+  const { children, props } = initialVnode
 
   // 处理props
   for (const key in props) {
@@ -56,11 +58,19 @@ function mountComponent(vnode: VNode, container: Element) {
   const instance = createComponentInstance(vnode)
 
   setupComponent(instance)
-  setupRenderEffect(instance, container)
+  setupRenderEffect(instance, vnode, container)
 }
 
-function setupRenderEffect(instance: ComponentInstance, container: Element) {
-  const subTree = instance.render!()
+function setupRenderEffect(
+  instance: ComponentInstance,
+  vnode: VNode,
+  container: Element
+) {
+  const { proxy } = instance
+  const subTree = instance.render!.call(proxy)
 
   patch(subTree, container)
+
+  // 所有的element都已经处理完
+  vnode.el = subTree.el
 }
