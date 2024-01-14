@@ -1,4 +1,5 @@
 import { shallowReadonly } from "../reactivity/reactive"
+import { emit } from "./componentEmit"
 import { initProps } from "./componentProps"
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance"
 import { Component } from "./h"
@@ -8,6 +9,7 @@ export interface ComponentInstance {
   vnode: VNode
   type: VNode["type"]
   props: object
+  emit: Function
   setupState?: object
   render?: Component["render"]
   proxy?: any
@@ -17,9 +19,12 @@ export function createComponentInstance(vnode: VNode): ComponentInstance {
   const component: ComponentInstance = {
     vnode,
     props: {},
+    emit: (): void => {},
     type: vnode.type,
     setupState: {},
   }
+
+  component.emit = emit.bind(null, component)
 
   return component
 }
@@ -40,7 +45,9 @@ function setupStatefulComponent(instance: ComponentInstance) {
 
   if (setup) {
     // setup可以返回一个对象或者渲染函数
-    const setupResult = setup(shallowReadonly(instance.props))
+    const setupResult = setup(shallowReadonly(instance.props), {
+      emit: instance.emit,
+    })
 
     handleSetupResult(instance, setupResult)
   }

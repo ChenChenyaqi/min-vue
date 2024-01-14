@@ -9,7 +9,15 @@ export const App = {
       "hi, " + this.msg,
       "min-vue",
       h("p", { onClick: () => console.log("click!") }, "我是一个p"),
-      h(Foo, { count: 1 }),
+      h(Foo, {
+        count: 1,
+        onAdd(a, b) {
+          console.log("onAdd: ", a, b)
+        },
+        onAddFoo(a) {
+          console.log("onAddFoo: ", a)
+        },
+      }),
     ])
   },
   setup() {
