@@ -32,9 +32,15 @@ function mountElement(initialVnode: VNode, container: Element) {
   const { children, props, shapeFlag } = initialVnode
 
   // 处理props
+  const isOn = (key: string) => /^on[A-Z]/.test(key)
   for (const key in props) {
     const value = props[key]
-    el.setAttribute(key, value)
+    if (isOn(key)) {
+      const event = key.slice(2).toLowerCase()
+      el.addEventListener(event, value)
+    } else {
+      el.setAttribute(key, value)
+    }
   }
   // 处理children
   if (

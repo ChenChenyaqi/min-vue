@@ -7,7 +7,7 @@ export const App = {
     return h("div", { id: "root", class: ["red", "hard"] }, [
       "hi, " + this.msg,
       "min-vue",
-      h("p", "我是一个p"),
+      h("p", { onClick: () => console.log("click!") }, "我是一个p"),
       h("p", "我是一个p2"),
     ])
   },
