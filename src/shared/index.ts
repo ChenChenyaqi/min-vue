@@ -19,3 +19,7 @@ export function convertStringToHTMLElement(
   }
   return rootElement as Element
 }
+
+export function hasOwn(val: object, key: string) {
+  return Object.prototype.hasOwnProperty.call(val, key)
+}
