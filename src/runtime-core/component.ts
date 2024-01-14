@@ -1,3 +1,5 @@
+import { shallowReadonly } from "../reactivity/reactive"
+import { initProps } from "./componentProps"
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance"
 import { Component } from "./h"
 import { VNode } from "./vnode"
@@ -5,6 +7,7 @@ import { VNode } from "./vnode"
 export interface ComponentInstance {
   vnode: VNode
   type: VNode["type"]
+  props: object
   setupState?: object
   render?: Component["render"]
   proxy?: any
@@ -13,6 +16,7 @@ export interface ComponentInstance {
 export function createComponentInstance(vnode: VNode): ComponentInstance {
   const component: ComponentInstance = {
     vnode,
+    props: {},
     type: vnode.type,
     setupState: {},
   }
@@ -21,7 +25,7 @@ export function createComponentInstance(vnode: VNode): ComponentInstance {
 }
 
 export function setupComponent(instance: ComponentInstance) {
-  // initProps()
+  initProps(instance, instance.vnode.props)
   // initSlots()
 
   setupStatefulComponent(instance)
@@ -36,7 +40,7 @@ function setupStatefulComponent(instance: ComponentInstance) {
 
   if (setup) {
     // setup可以返回一个对象或者渲染函数
-    const setupResult = setup()
+    const setupResult = setup(shallowReadonly(instance.props))
 
     handleSetupResult(instance, setupResult)
   }

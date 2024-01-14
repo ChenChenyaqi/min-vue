@@ -4,7 +4,7 @@ type Children = string | VNode[]
 
 export interface Component {
   render: () => VNode
-  setup: () => object
+  setup: (props: object) => object
 }
 
 export function h(type: string)
