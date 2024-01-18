@@ -1,5 +1,4 @@
 import { isObject } from "../shared"
-import { ShapeFlags } from "../shared/shapeFlags"
 import {
   ComponentInstance,
   createComponentInstance,
@@ -13,10 +12,9 @@ export function render(vnode: VNode, container: Element) {
 
 function patch(vnode: VNode, container: Element) {
   // 处理组件
-  const { shapeFlag } = vnode
-  if (shapeFlag & ShapeFlags.ELEMENT) {
+  if (typeof vnode.type === "string") {
     processElement(vnode, container)
-  } else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) {
+  } else if (isObject(vnode.type)) {
     processComponent(vnode, container)
   }
 }
@@ -29,7 +27,7 @@ function mountElement(initialVnode: VNode, container: Element) {
   const el = (initialVnode.el = document.createElement(
     initialVnode.type as string
   ))
-  const { children, props, shapeFlag } = initialVnode
+  const { children, props } = initialVnode
 
   // 处理props
   const isOn = (key: string) => /^on[A-Z]/.test(key)
@@ -43,17 +41,14 @@ function mountElement(initialVnode: VNode, container: Element) {
     }
   }
   // 处理children
-  if (
-    shapeFlag & ShapeFlags.TEXT_CHILDREN &&
-    !(shapeFlag & ShapeFlags.ARRAY_CHILDREN)
-  ) {
+  if (typeof children === "string") {
     el.textContent = children as string
-  } else {
-    ;(children as VNode[]).forEach((v) => {
-      if (typeof v === "string") {
-        el.textContent = el.textContent + v
+  } else if (Array.isArray(children)) {
+    children.forEach((child) => {
+      if (typeof child === "string") {
+        el.textContent += child
       } else {
-        patch(v, el)
+        patch(child, el)
       }
     })
   }

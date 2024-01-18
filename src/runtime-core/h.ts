@@ -1,6 +1,6 @@
 import { createVNode, VNode } from "./vnode"
 
-type Children = string | VNode[]
+type Children = string | VNode[] | VNode
 
 export interface Component {
   render: () => VNode
