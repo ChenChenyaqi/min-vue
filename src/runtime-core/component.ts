@@ -34,7 +34,7 @@ export function createComponentInstance(vnode: VNode): ComponentInstance {
 
 export function setupComponent(instance: ComponentInstance) {
   initProps(instance, instance.vnode.props)
-  initSlots(instance, instance.vnode.children)
+  initSlots(instance, instance.vnode.children as any)
 
   setupStatefulComponent(instance)
 }
