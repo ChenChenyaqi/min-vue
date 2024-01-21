@@ -7,7 +7,7 @@ export const Foo = {
 
   render() {
     return h("div", {}, [
-      renderSlots(this.$slots, "header"),
+      renderSlots(this.$slots, "header", { haha: "haha" }),
       h("p", "foo"),
       renderSlots(this.$slots, "footer"),
     ])

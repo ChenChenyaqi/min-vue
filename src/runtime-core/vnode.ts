@@ -1,16 +1,17 @@
 import { Component } from "./h"
 
+export const Text = Symbol("Text")
 export interface VNode {
-  type: string | Component
+  type: string | Component | Symbol
   props: object
   children: VNode[] | string
   el: Element | null
 }
 
 export function createVNode(
-  type: string | Component,
+  type: string | Component | Symbol,
   props?: object,
-  children?: VNode[]
+  children?: VNode[] | string
 ): VNode {
   const vnode: VNode = {
     type,
@@ -20,4 +21,8 @@ export function createVNode(
   }
 
   return vnode
+}
+
+export function createTextVNode(content: string) {
+  return createVNode(Text, {}, content)
 }

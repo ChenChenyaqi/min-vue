@@ -4,19 +4,44 @@ import {
   createComponentInstance,
   setupComponent,
 } from "./component"
-import { VNode } from "./vnode"
+import { Text, VNode } from "./vnode"
+
+export const Fragment = Symbol("Fragment")
 
 export function render(vnode: VNode, container: Element) {
   patch(vnode, container)
 }
 
 function patch(vnode: VNode, container: Element) {
-  // 处理组件
-  if (typeof vnode.type === "string") {
-    processElement(vnode, container)
-  } else if (isObject(vnode.type)) {
-    processComponent(vnode, container)
+  switch (vnode.type) {
+    case Fragment:
+      processFragment(vnode, container)
+      break
+    case Text:
+      processText(vnode, container)
+      break
+    default:
+      if (typeof vnode.type === "string") {
+        // 处理组件
+        processElement(vnode, container)
+      } else if (isObject(vnode.type)) {
+        processComponent(vnode, container)
+      }
+      break
   }
+}
+
+function processText(vnode: VNode, container: Element) {
+  const { children } = vnode
+  const textNode = (vnode.el = document.createTextNode(
+    children as string
+  ) as any)
+  container.appendChild(textNode)
+}
+
+function processFragment(vnode: VNode, container: Element) {
+  if (typeof vnode.children === "string") return
+  vnode.children.forEach((child) => patch(child, container))
 }
 
 function processElement(vnode: VNode, container: Element) {
@@ -45,11 +70,7 @@ function mountElement(initialVnode: VNode, container: Element) {
     el.textContent = children as string
   } else if (Array.isArray(children)) {
     children.forEach((child) => {
-      if (typeof child === "string") {
-        el.textContent += child
-      } else {
-        patch(child, el)
-      }
+      patch(child, el)
     })
   }
   // 挂载
