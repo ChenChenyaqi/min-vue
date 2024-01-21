@@ -10,7 +10,11 @@ export function initSlots(
   const slots = {}
   for (const key in children) {
     const value = children[key]
-    slots[key] = Array.isArray(value) ? value : [value]
+    slots[key] = Array.isArray(value)
+      ? value
+      : typeof value === "function"
+      ? value
+      : [value]
   }
   instance.slots = slots
 }
