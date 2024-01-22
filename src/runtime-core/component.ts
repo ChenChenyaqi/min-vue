@@ -47,10 +47,12 @@ function setupStatefulComponent(instance: ComponentInstance) {
   const { setup } = Component
 
   if (setup) {
+    setCurrentInstance(instance)
     // setup可以返回一个对象或者渲染函数
     const setupResult = setup(shallowReadonly(instance.props), {
       emit: instance.emit,
     })
+    setCurrentInstance(null)
 
     handleSetupResult(instance, setupResult)
   }
@@ -69,4 +71,14 @@ function handleSetupResult(instance: ComponentInstance, setupResult: object) {
 function finishComponentSetup(instance: ComponentInstance) {
   const Component = instance.type as Component
   instance.render = Component.render
+}
+
+let currentInstance: null | ComponentInstance = null
+
+export function getCurrentInstance() {
+  return currentInstance
+}
+
+function setCurrentInstance(instance: ComponentInstance | null) {
+  currentInstance = instance
 }
