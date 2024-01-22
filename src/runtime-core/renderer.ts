@@ -9,13 +9,17 @@ import { Text, VNode } from "./vnode"
 export const Fragment = Symbol("Fragment")
 
 export function render(vnode: VNode, container: Element) {
-  patch(vnode, container)
+  patch(vnode, container, undefined)
 }
 
-function patch(vnode: VNode, container: Element) {
+function patch(
+  vnode: VNode,
+  container: Element,
+  parentComponent?: ComponentInstance
+) {
   switch (vnode.type) {
     case Fragment:
-      processFragment(vnode, container)
+      processFragment(vnode, container, parentComponent)
       break
     case Text:
       processText(vnode, container)
@@ -23,9 +27,9 @@ function patch(vnode: VNode, container: Element) {
     default:
       if (typeof vnode.type === "string") {
         // 处理组件
-        processElement(vnode, container)
+        processElement(vnode, container, parentComponent)
       } else if (isObject(vnode.type)) {
-        processComponent(vnode, container)
+        processComponent(vnode, container, parentComponent)
       }
       break
   }
@@ -39,16 +43,28 @@ function processText(vnode: VNode, container: Element) {
   container.appendChild(textNode)
 }
 
-function processFragment(vnode: VNode, container: Element) {
+function processFragment(
+  vnode: VNode,
+  container: Element,
+  parentComponent?: ComponentInstance
+) {
   if (typeof vnode.children === "string") return
-  vnode.children.forEach((child) => patch(child, container))
+  vnode.children.forEach((child) => patch(child, container, parentComponent))
 }
 
-function processElement(vnode: VNode, container: Element) {
-  mountElement(vnode, container)
+function processElement(
+  vnode: VNode,
+  container: Element,
+  parentComponent?: ComponentInstance
+) {
+  mountElement(vnode, container, parentComponent)
 }
 
-function mountElement(initialVnode: VNode, container: Element) {
+function mountElement(
+  initialVnode: VNode,
+  container: Element,
+  parentComponent?: ComponentInstance
+) {
   const el = (initialVnode.el = document.createElement(
     initialVnode.type as string
   ))
@@ -70,19 +86,27 @@ function mountElement(initialVnode: VNode, container: Element) {
     el.textContent = children as string
   } else if (Array.isArray(children)) {
     children.forEach((child) => {
-      patch(child, el)
+      patch(child, el, parentComponent)
     })
   }
   // 挂载
   container.appendChild(el)
 }
 
-function processComponent(vnode: VNode, container: Element) {
-  mountComponent(vnode, container)
+function processComponent(
+  vnode: VNode,
+  container: Element,
+  parentComponent?: ComponentInstance
+) {
+  mountComponent(vnode, container, parentComponent)
 }
 
-function mountComponent(vnode: VNode, container: Element) {
-  const instance = createComponentInstance(vnode)
+function mountComponent(
+  vnode: VNode,
+  container: Element,
+  parentComponent?: ComponentInstance
+) {
+  const instance = createComponentInstance(vnode, parentComponent)
 
   setupComponent(instance)
   setupRenderEffect(instance, vnode, container)
@@ -96,7 +120,7 @@ function setupRenderEffect(
   const { proxy } = instance
   const subTree = instance.render!.call(proxy)
 
-  patch(subTree, container)
+  patch(subTree, container, instance)
 
   // 所有的element都已经处理完
   vnode.el = subTree.el

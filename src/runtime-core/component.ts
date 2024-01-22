@@ -12,17 +12,26 @@ export interface ComponentInstance {
   props: object
   emit: Function
   slots: object
+  provides?: object
+  parent?: ComponentInstance
   setupState?: object
   render?: Component["render"]
   proxy?: any
 }
 
-export function createComponentInstance(vnode: VNode): ComponentInstance {
+export function createComponentInstance(
+  vnode: VNode,
+  parent?: ComponentInstance
+): ComponentInstance {
+  console.log("parent:", parent)
+
   const component: ComponentInstance = {
     vnode,
     props: {},
     emit: (): void => {},
     slots: {},
+    provides: parent ? parent.provides : {},
+    parent,
     type: vnode.type,
     setupState: {},
   }
