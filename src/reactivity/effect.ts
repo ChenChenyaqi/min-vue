@@ -1,6 +1,10 @@
 import { extend } from "../shared"
 
-const effectStack: ReactiveEffect[] = []
+// 当前的副作用函数
+let activeEffect: null | ReactiveEffect = null
+// 收集effect函数
+const bucket = new WeakMap()
+let shouldTrack = false
 export class ReactiveEffect {
   private _fn: any
   // 是否没有stop过
@@ -14,12 +18,16 @@ export class ReactiveEffect {
   }
 
   run() {
+    if (!this.active) {
+      return this._fn()
+    }
+
+    shouldTrack = true
+
     activeEffect = this
-    cleanupEffect(this)
-    effectStack.push(this)
     const res = this._fn()
-    effectStack.pop()
-    activeEffect = effectStack[effectStack.length - 1]
+    shouldTrack = false
+    activeEffect = null
     return res
   }
   stop() {
@@ -40,10 +48,6 @@ function cleanupEffect(effect: ReactiveEffect) {
   effect.deps.length = 0
 }
 
-// 当前的副作用函数
-let activeEffect: null | ReactiveEffect = null
-// 收集effect函数
-const bucket = new WeakMap()
 export function track(target, key) {
   if (!activeEffect) {
     return

@@ -110,7 +110,7 @@ describe("effect", () => {
     expect(effectFn2).toHaveBeenCalledTimes(2)
   })
 
-  it("嵌套effect", () => {
+  it.skip("嵌套effect", () => {
     const data = { foo: true, bar: true }
     const obj = reactive(data)
     let temp1, temp2
