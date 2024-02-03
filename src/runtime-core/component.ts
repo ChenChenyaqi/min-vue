@@ -1,3 +1,4 @@
+import { proxyRefs } from "../reactivity"
 import { shallowReadonly } from "../reactivity/reactive"
 import { emit } from "./componentEmit"
 import { initProps } from "./componentProps"
@@ -17,14 +18,14 @@ export interface ComponentInstance {
   setupState?: object
   render?: Component["render"]
   proxy?: any
+  isMounted: boolean
+  subTree: VNode | null
 }
 
 export function createComponentInstance(
   vnode: VNode,
   parent?: ComponentInstance
 ): ComponentInstance {
-  console.log("parent:", parent)
-
   const component: ComponentInstance = {
     vnode,
     props: {},
@@ -34,6 +35,8 @@ export function createComponentInstance(
     parent,
     type: vnode.type,
     setupState: {},
+    isMounted: false,
+    subTree: null,
   }
 
   component.emit = emit.bind(null, component)
@@ -58,9 +61,11 @@ function setupStatefulComponent(instance: ComponentInstance) {
   if (setup) {
     setCurrentInstance(instance)
     // setup可以返回一个对象或者渲染函数
-    const setupResult = setup(shallowReadonly(instance.props), {
-      emit: instance.emit,
-    })
+    const setupResult = proxyRefs(
+      setup(shallowReadonly(instance.props), {
+        emit: instance.emit,
+      })
+    )
     setCurrentInstance(null)
 
     handleSetupResult(instance, setupResult)
