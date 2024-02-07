@@ -12,7 +12,7 @@ export const Fragment = Symbol("Fragment")
 
 interface Options {
   createElement: (type: string) => any
-  patchProp: (el: any, key: string, value: any) => void
+  patchProp: (el: any, key: string, oldValue: any, newValue: any) => void
   insert: (el: any, container: any) => void
   createTextNode: (content: string) => any
 }
@@ -84,10 +84,37 @@ export function createRenderer(options: Options) {
   }
 
   function patchElement(newVNode: VNode, preVNode: VNode, container: Element) {
-    console.log("patchElement")
-    console.log(newVNode, preVNode)
     // props
+    const oldProps = preVNode.props || EMPTY_OBJ
+    const newProps = newVNode.props || EMPTY_OBJ
+
+    const el = (newVNode.el = preVNode.el) as Element
+
+    patchProps(el, oldProps, newProps)
     // children
+  }
+  const EMPTY_OBJ = {}
+  function patchProps(el: Element, oldProps, newProps) {
+    if (oldProps === newProps) {
+      return
+    }
+    for (const key in newProps) {
+      const preProp = oldProps[key]
+      const nextProp = newProps[key]
+
+      if (preProp !== nextProp) {
+        patchProp(el, key, preProp, nextProp)
+      }
+    }
+    if (oldProps === EMPTY_OBJ) {
+      return
+    }
+    // 移除不存在的props
+    for (const key in oldProps) {
+      if (!(key in newProps)) {
+        patchProp(el, key, oldProps[key], null)
+      }
+    }
   }
 
   function mountElement(
@@ -101,7 +128,7 @@ export function createRenderer(options: Options) {
     // 处理props
     for (const key in props) {
       const value = props[key]
-      patchProp(el, key, value)
+      patchProp(el, key, null, value)
     }
     // 处理children
     if (typeof children === "string") {

@@ -116,6 +116,6 @@ export function effect(fn: Function, options: Options = {}) {
   return runner
 }
 
-export function stop(runner: Function) {
-  ;(runner as any).effect.stop()
+export function stop(runner: any) {
+  runner.effect.stop()
 }
