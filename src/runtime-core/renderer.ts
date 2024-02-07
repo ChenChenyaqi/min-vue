@@ -1,5 +1,5 @@
 import { effect } from "../reactivity/effect"
-import { isObject } from "../shared"
+import { isArray, isObject, isString } from "../shared"
 import {
   ComponentInstance,
   createComponentInstance,
@@ -15,10 +15,19 @@ interface Options {
   patchProp: (el: any, key: string, oldValue: any, newValue: any) => void
   insert: (el: any, container: any) => void
   createTextNode: (content: string) => any
+  remove: (child: any) => any
+  setElementText: (el, text) => any
 }
 
 export function createRenderer(options: Options) {
-  const { createElement, patchProp, insert, createTextNode } = options
+  const {
+    createElement: hostCreateElement,
+    patchProp: hostPatchProp,
+    insert: hostInsert,
+    createTextNode: hostCreateTextNode,
+    remove: hostRemove,
+    setElementText: hostSetElementText,
+  } = options
 
   function render(vnode: VNode, container: Element) {
     patch(vnode, null, container, undefined)
@@ -54,8 +63,10 @@ export function createRenderer(options: Options) {
     container: Element
   ) {
     const { children } = newVNode
-    const textNode = (newVNode.el = createTextNode(children as string) as any)
-    insert(textNode, container)
+    const textNode = (newVNode.el = hostCreateTextNode(
+      children as string
+    ) as any)
+    hostInsert(textNode, container)
   }
 
   function processFragment(
@@ -79,20 +90,59 @@ export function createRenderer(options: Options) {
     if (!preVNode) {
       mountElement(newVNode, container, parentComponent)
     } else {
-      patchElement(newVNode, preVNode, container)
+      patchElement(newVNode, preVNode, parentComponent)
     }
   }
 
-  function patchElement(newVNode: VNode, preVNode: VNode, container: Element) {
-    // props
+  function patchElement(
+    newVNode: VNode,
+    preVNode: VNode,
+    parentComponent?: ComponentInstance
+  ) {
     const oldProps = preVNode.props || EMPTY_OBJ
     const newProps = newVNode.props || EMPTY_OBJ
 
     const el = (newVNode.el = preVNode.el) as Element
-
+    patchChildren(preVNode, newVNode, el, parentComponent)
     patchProps(el, oldProps, newProps)
-    // children
   }
+
+  function patchChildren(
+    preVNode: VNode,
+    newVNode: VNode,
+    el: Element,
+    parentComponent?: ComponentInstance
+  ) {
+    const newChildren = newVNode.children
+    const preChildren = preVNode.children
+
+    // 新children是文本
+    if (isString(newChildren)) {
+      if (isArray(preChildren)) {
+        // 把老children清空
+        unmountChildren(preChildren as VNode[])
+      }
+      if (newChildren !== preChildren) {
+        // 更新text
+        hostSetElementText(el, newChildren)
+      }
+    } else if (isArray(newChildren)) {
+      if (isString(preChildren)) {
+        hostSetElementText(el, "")
+        mountChildren(newChildren as VNode[], el, parentComponent)
+      } else if (isArray(preChildren)) {
+        // diff
+      }
+    }
+  }
+
+  function unmountChildren(children: VNode[]) {
+    for (let i = 0; i < children.length; i++) {
+      const el = children[i].el
+      hostRemove(el)
+    }
+  }
+
   const EMPTY_OBJ = {}
   function patchProps(el: Element, oldProps, newProps) {
     if (oldProps === newProps) {
@@ -103,7 +153,7 @@ export function createRenderer(options: Options) {
       const nextProp = newProps[key]
 
       if (preProp !== nextProp) {
-        patchProp(el, key, preProp, nextProp)
+        hostPatchProp(el, key, preProp, nextProp)
       }
     }
     if (oldProps === EMPTY_OBJ) {
@@ -112,7 +162,7 @@ export function createRenderer(options: Options) {
     // 移除不存在的props
     for (const key in oldProps) {
       if (!(key in newProps)) {
-        patchProp(el, key, oldProps[key], null)
+        hostPatchProp(el, key, oldProps[key], null)
       }
     }
   }
@@ -122,24 +172,34 @@ export function createRenderer(options: Options) {
     container: Element,
     parentComponent?: ComponentInstance
   ) {
-    const el = (initialVnode.el = createElement(initialVnode.type as string))
+    const el = (initialVnode.el = hostCreateElement(
+      initialVnode.type as string
+    ))
     const { children, props } = initialVnode
 
     // 处理props
     for (const key in props) {
       const value = props[key]
-      patchProp(el, key, null, value)
+      hostPatchProp(el, key, null, value)
     }
     // 处理children
     if (typeof children === "string") {
       el.textContent = children as string
     } else if (Array.isArray(children)) {
-      children.forEach((child) => {
-        patch(child, null, el, parentComponent)
-      })
+      mountChildren(children, el, parentComponent)
     }
     // 挂载
-    insert(el, container)
+    hostInsert(el, container)
+  }
+
+  function mountChildren(
+    children: VNode[],
+    el: Element,
+    parentComponent?: ComponentInstance
+  ) {
+    children.forEach((child) => {
+      patch(child, null, el, parentComponent)
+    })
   }
 
   function processComponent(
