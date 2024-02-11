@@ -19,12 +19,14 @@ export default {
       ? h("div", { onClick: this.handleClick }, [
           h("div", {}, "我是一个div1"),
           h("div", {}, "我是一个div2"),
+          h("a", { href: "xx" }, "我是一个a"),
           h("div", {}, "我是一个div3"),
         ])
       : h("div", {}, [
           h("div", {}, "我是一个div3"),
           h("div", {}, "我是一个div1"),
           h("div", {}, "我是一个div2"),
+          h("a", { href: "xx" }, "我是一个a"),
         ])
   },
 }

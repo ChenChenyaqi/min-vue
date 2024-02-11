@@ -6,11 +6,12 @@ export interface VNode {
   props: object
   children: VNode[] | string
   el: Element | null
+  key?: string
 }
 
 export function createVNode(
   type: string | Component | Symbol,
-  props?: object,
+  props?: any,
   children?: VNode[] | string
 ): VNode {
   const vnode: VNode = {
@@ -18,6 +19,7 @@ export function createVNode(
     props: props || {},
     children: children || [],
     el: null,
+    key: props?.key,
   }
 
   return vnode
