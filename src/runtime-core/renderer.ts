@@ -5,6 +5,7 @@ import {
   createComponentInstance,
   setupComponent,
 } from "./component"
+import { shouldUpdateComponent } from "./componentUpdateUtils"
 import { createAppAPI } from "./createApp"
 import { Text, VNode } from "./vnode"
 
@@ -57,7 +58,6 @@ export function createRenderer(options: Options) {
         break
     }
   }
-
   function processText(
     newVNode: VNode,
     preVNode: VNode | null,
@@ -160,7 +160,6 @@ export function createRenderer(options: Options) {
     parentComponent,
     parentAnchor?: Element
   ) {
-    debugger
     // 四个索引值
     let preStartIndex = 0
     let preEndIndex = preChildren.length - 1
@@ -318,7 +317,25 @@ export function createRenderer(options: Options) {
     parentComponent?: ComponentInstance,
     anchor?: Element
   ) {
-    mountComponent(newVNode, container, parentComponent, anchor)
+    if (!oldVNode) {
+      mountComponent(newVNode, container, parentComponent, anchor)
+    } else {
+      updateComponent(newVNode, oldVNode)
+    }
+  }
+
+  function updateComponent(newVNode: VNode, oldVNode: VNode | null) {
+    const instance = oldVNode?.component as ComponentInstance
+    if (shouldUpdateComponent(newVNode, oldVNode)) {
+      newVNode.component = instance
+      instance.next = newVNode
+      instance.update?.()
+    } else {
+      // 不更新就要重置
+      newVNode.component = oldVNode?.component
+      newVNode.el = oldVNode?.el as Element
+      instance.vnode = newVNode
+    }
   }
 
   function mountComponent(
@@ -328,6 +345,7 @@ export function createRenderer(options: Options) {
     anchor?: Element
   ) {
     const instance = createComponentInstance(vnode, parentComponent)
+    vnode.component = instance
 
     setupComponent(instance)
     setupRenderEffect(instance, vnode, container, anchor)
@@ -339,7 +357,7 @@ export function createRenderer(options: Options) {
     container: Element,
     anchor?: Element
   ) {
-    effect(() => {
+    instance.update = effect(() => {
       if (!instance.isMounted) {
         // 挂载
         const { proxy } = instance
@@ -351,6 +369,13 @@ export function createRenderer(options: Options) {
         instance.isMounted = true
       } else {
         // 更新
+        // 更新props
+        const { next: newVNode, vnode: preVNode } = instance
+        if (newVNode) {
+          newVNode.el = preVNode.el
+          updateComponentPreRender(instance, newVNode)
+        }
+
         const { proxy } = instance
         const subTree = instance.render!.call(proxy)
         const preSubTree = instance.subTree
@@ -359,6 +384,15 @@ export function createRenderer(options: Options) {
         patch(subTree, preSubTree, container, instance, anchor)
       }
     })
+  }
+
+  function updateComponentPreRender(
+    instance: ComponentInstance,
+    newVNode: VNode
+  ) {
+    instance.vnode = newVNode
+    instance.next = undefined
+    instance.props = newVNode.props
   }
 
   return {

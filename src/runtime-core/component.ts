@@ -20,6 +20,8 @@ export interface ComponentInstance {
   proxy?: any
   isMounted: boolean
   subTree: VNode | null
+  update?: Function | null
+  next?: VNode
 }
 
 export function createComponentInstance(
