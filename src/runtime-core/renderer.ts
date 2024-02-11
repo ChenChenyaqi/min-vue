@@ -7,6 +7,7 @@ import {
 } from "./component"
 import { shouldUpdateComponent } from "./componentUpdateUtils"
 import { createAppAPI } from "./createApp"
+import { queueJobs } from "./scheduler"
 import { Text, VNode } from "./vnode"
 
 export const Fragment = Symbol("Fragment")
@@ -357,33 +358,40 @@ export function createRenderer(options: Options) {
     container: Element,
     anchor?: Element
   ) {
-    instance.update = effect(() => {
-      if (!instance.isMounted) {
-        // 挂载
-        const { proxy } = instance
-        const subTree = (instance.subTree = instance.render!.call(proxy))
+    instance.update = effect(
+      () => {
+        if (!instance.isMounted) {
+          // 挂载
+          const { proxy } = instance
+          const subTree = (instance.subTree = instance.render!.call(proxy))
 
-        patch(subTree, null, container, instance, anchor)
-        // 所有的element都已经处理完
-        vnode.el = subTree.el
-        instance.isMounted = true
-      } else {
-        // 更新
-        // 更新props
-        const { next: newVNode, vnode: preVNode } = instance
-        if (newVNode) {
-          newVNode.el = preVNode.el
-          updateComponentPreRender(instance, newVNode)
+          patch(subTree, null, container, instance, anchor)
+          // 所有的element都已经处理完
+          vnode.el = subTree.el
+          instance.isMounted = true
+        } else {
+          // 更新
+          // 更新props
+          const { next: newVNode, vnode: preVNode } = instance
+          if (newVNode) {
+            newVNode.el = preVNode.el
+            updateComponentPreRender(instance, newVNode)
+          }
+
+          const { proxy } = instance
+          const subTree = instance.render!.call(proxy)
+          const preSubTree = instance.subTree
+          instance.subTree = subTree
+
+          patch(subTree, preSubTree, container, instance, anchor)
         }
-
-        const { proxy } = instance
-        const subTree = instance.render!.call(proxy)
-        const preSubTree = instance.subTree
-        instance.subTree = subTree
-
-        patch(subTree, preSubTree, container, instance, anchor)
+      },
+      {
+        scheduler: () => {
+          queueJobs(instance.update)
+        },
       }
-    })
+    )
   }
 
   function updateComponentPreRender(
