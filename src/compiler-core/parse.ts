@@ -6,52 +6,49 @@ interface Context {
 export function baseParse(content: string) {
   const context = createParserContext(content)
 
-  return createRoot(parseChildren(context))
+  return createRoot(parseChildren(context, ""))
 }
 
-function parseChildren(context: Context) {
+function parseChildren(context: Context, parentTag: string) {
   const nodes: any[] = []
 
-  let node
-  // {{}}
-  const s = context.source
-  if (s.startsWith("{{")) {
-    node = parseInterpolation(context)
-  } else if (s[0] === "<") {
-    // element
-    if (/[a-z]/i.test(s[1])) {
-      node = parseElement(context)
+  while (!isEnd(context, parentTag)) {
+    let node
+    // {{}}
+    const s = context.source
+    if (s.startsWith("{{")) {
+      node = parseInterpolation(context)
+    } else if (s[0] === "<") {
+      // element
+      if (/[a-z]/i.test(s[1])) {
+        node = parseElement(context)
+      }
     }
+    // text
+    if (!node) {
+      node = parseText(context)
+    }
+    nodes.push(node)
   }
-
-  // text
-  if (!node) {
-    node = parseText(context)
-  }
-  nodes.push(node)
 
   return nodes
 }
 
-// 处理text
-function parseText(context: Context) {
-  const content = parseTextData(context, context.source.length)
-
-  advanceBy(context, content.length)
-
-  return {
-    type: NodeTypes.TEXT,
-    content,
+function isEnd(context: Context, parentTag: string) {
+  // 1. source有值的时候
+  // 2. 遇到结束标签的时候
+  const s = context.source
+  if (parentTag && s.startsWith(`</${parentTag}>`)) {
+    return true
   }
-}
-
-function parseTextData(context: Context, length: number) {
-  return context.source.slice(0, length)
+  return !s
 }
 
 // 处理element
 function parseElement(context: Context) {
-  const element = parseTag(context, TagType.START)
+  const element: any = parseTag(context, TagType.START)
+  element.children = parseChildren(context, element.tag)
+
   parseTag(context, TagType.END)
   return element
 }
@@ -94,6 +91,29 @@ function parseInterpolation(context: Context) {
       content,
     },
   }
+}
+
+// 处理text
+function parseText(context: Context) {
+  let endIndex = context.source.length
+  const endToken = "{{"
+
+  const index = context.source.indexOf(endToken)
+  if (index !== -1) {
+    endIndex = index
+  }
+  const content = parseTextData(context, endIndex)
+
+  advanceBy(context, content.length)
+
+  return {
+    type: NodeTypes.TEXT,
+    content,
+  }
+}
+
+function parseTextData(context: Context, length: number) {
+  return context.source.slice(0, length)
 }
 
 // 推进删除
