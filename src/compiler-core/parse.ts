@@ -1,13 +1,7 @@
-import { NodeTypes, TagType } from "./ast"
+import { Element, Interpolation, NodeTypes, TagType, Text } from "./ast"
 
 interface Context {
   source: string
-}
-
-interface Element {
-  tag: string
-  type: NodeTypes
-  children: any[]
 }
 
 export function baseParse(content: string) {
@@ -88,7 +82,7 @@ function parseTag(context: Context, tagType: TagType) {
 }
 
 // 处理插值
-function parseInterpolation(context: Context) {
+function parseInterpolation(context: Context): Interpolation {
   const openDelimiter = "{{"
   const closeDelimiter = "}}"
 
@@ -115,7 +109,7 @@ function parseInterpolation(context: Context) {
 }
 
 // 处理text
-function parseText(context: Context, ancestors: Element[]) {
+function parseText(context: Context, ancestors: Element[]): Text {
   let endIndex = context.source.length
   const topElement = ancestors[ancestors.length - 1]
   const endToken = ["{{", `</${topElement?.tag || ""}>`]

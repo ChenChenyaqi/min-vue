@@ -27,5 +27,6 @@ module.exports = {
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-this-alias": "off",
     "no-debugger": "off",
+    "no-extra-semi": "off",
   },
 }
