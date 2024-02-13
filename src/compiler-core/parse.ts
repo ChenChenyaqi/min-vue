@@ -48,7 +48,7 @@ function isEnd(context: Context, ancestors: Element[]) {
   // 2. 遇到结束标签的时候
   const s = context.source
   const expectTag = ancestors[ancestors.length - 1]?.tag
-  for (let i = 0; i < ancestors.length; i++) {
+  for (let i = ancestors.length - 1; i >= 0; i--) {
     const tag = ancestors[i].tag
     if (s.startsWith(`</${tag}>`)) {
       if (tag !== expectTag) {
