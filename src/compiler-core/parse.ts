@@ -3,16 +3,23 @@ import { NodeTypes, TagType } from "./ast"
 interface Context {
   source: string
 }
+
+interface Element {
+  tag: string
+  type: NodeTypes
+  children: any[]
+}
+
 export function baseParse(content: string) {
   const context = createParserContext(content)
 
-  return createRoot(parseChildren(context, ""))
+  return createRoot(parseChildren(context, []))
 }
 
-function parseChildren(context: Context, parentTag: string) {
+function parseChildren(context: Context, ancestors: Element[]) {
   const nodes: any[] = []
 
-  while (!isEnd(context, parentTag)) {
+  while (!isEnd(context, ancestors)) {
     let node
     // {{}}
     const s = context.source
@@ -21,33 +28,46 @@ function parseChildren(context: Context, parentTag: string) {
     } else if (s[0] === "<") {
       // element
       if (/[a-z]/i.test(s[1])) {
-        node = parseElement(context)
+        node = parseElement(context, ancestors)
       }
     }
     // text
     if (!node) {
-      node = parseText(context)
+      node = parseText(context, ancestors)
     }
-    nodes.push(node)
+    if (node) {
+      nodes.push(node)
+    }
   }
 
   return nodes
 }
 
-function isEnd(context: Context, parentTag: string) {
+function isEnd(context: Context, ancestors: Element[]) {
   // 1. source有值的时候
   // 2. 遇到结束标签的时候
   const s = context.source
-  if (parentTag && s.startsWith(`</${parentTag}>`)) {
-    return true
+  const expectTag = ancestors[ancestors.length - 1]?.tag
+  for (let i = 0; i < ancestors.length; i++) {
+    const tag = ancestors[i].tag
+    if (s.startsWith(`</${tag}>`)) {
+      if (tag !== expectTag) {
+        throw Error(`不存在结束标签 </${expectTag}>`)
+      } else {
+        return true
+      }
+    }
   }
   return !s
 }
 
 // 处理element
-function parseElement(context: Context) {
-  const element: any = parseTag(context, TagType.START)
-  element.children = parseChildren(context, element.tag)
+function parseElement(context: Context, ancestors: Element[]) {
+  const element = parseTag(context, TagType.START) as Element
+
+  ancestors.push(element)
+  element.children = parseChildren(context, ancestors)
+  ancestors.pop()
 
   parseTag(context, TagType.END)
   return element
@@ -63,6 +83,7 @@ function parseTag(context: Context, tagType: TagType) {
   return {
     type: NodeTypes.ELEMENT,
     tag,
+    children: [],
   }
 }
 
@@ -94,12 +115,16 @@ function parseInterpolation(context: Context) {
 }
 
 // 处理text
-function parseText(context: Context) {
+function parseText(context: Context, ancestors: Element[]) {
   let endIndex = context.source.length
-  const endToken = "{{"
+  const topElement = ancestors[ancestors.length - 1]
+  const endToken = ["{{", `</${topElement?.tag || ""}>`]
 
-  const index = context.source.indexOf(endToken)
-  if (index !== -1) {
+  const index = endToken
+    .map((token) => context.source.indexOf(token))
+    .filter((i) => i !== -1)
+    .sort((a, b) => a - b)[0]
+  if (index) {
     endIndex = index
   }
   const content = parseTextData(context, endIndex)
