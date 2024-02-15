@@ -143,6 +143,7 @@ function advanceBy(context: Context, length: number) {
 function createRoot(children) {
   return {
     children,
+    type: NodeTypes.ROOT,
   }
 }
 

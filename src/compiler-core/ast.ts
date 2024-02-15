@@ -24,6 +24,7 @@ export enum NodeTypes {
   SIMPLE_EXPRESSION,
   ELEMENT,
   TEXT,
+  ROOT,
 }
 
 export enum TagType {
