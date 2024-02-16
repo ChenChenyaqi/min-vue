@@ -2,6 +2,7 @@ export interface Element {
   tag: string
   type: NodeTypes
   children: any[]
+  codegenNode?: any
 }
 
 export interface Interpolation {
@@ -25,6 +26,7 @@ export enum NodeTypes {
   ELEMENT,
   TEXT,
   ROOT,
+  COMPOUND_EXPRESSION,
 }
 
 export enum TagType {

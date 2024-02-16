@@ -1,5 +1,10 @@
-import { TO_DISPLAY_STRING, helperMapName } from "./runtimeHelpers"
-import { NodeTypes } from "./ast"
+import {
+  CREATE_ELEMENT_VNODE,
+  TO_DISPLAY_STRING,
+  helperMapName,
+} from "./runtimeHelpers"
+import { Element, Interpolation, NodeTypes, Text } from "./ast"
+import { isString } from "../shared"
 
 export function generate(ast) {
   const context = createCodegenContext()
@@ -46,24 +51,52 @@ function genNode(node, context) {
     case NodeTypes.SIMPLE_EXPRESSION:
       genExpression(node, context)
       break
+    case NodeTypes.ELEMENT:
+      genElement(node, context)
+      break
+    case NodeTypes.COMPOUND_EXPRESSION:
+      genCompoundExpression(node, context)
+      break
     default:
       break
   }
 }
 
-function genText(node, context) {
+function genCompoundExpression(node, context) {
+  const { push } = context
+  const children = node.children
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i]
+    if (isString(child)) {
+      push(child)
+    } else {
+      genNode(child, context)
+    }
+  }
+}
+
+function genElement(node: Element, context) {
+  const { push, helper } = context
+  const { tag, children } = node
+  console.log(children)
+  push(`${helper(CREATE_ELEMENT_VNODE)}("${tag}", null, `)
+  genNode(children, context)
+  push(")")
+}
+
+function genText(node: Text, context) {
   const { push } = context
   push(`'${node.content}'`)
 }
 
-function genInterpolation(node, context) {
+function genInterpolation(node: Interpolation, context) {
   const { push, helper } = context
   push(`${helper(TO_DISPLAY_STRING)}(`)
   genNode(node.content, context)
   push(")")
 }
 
-function genExpression(node, context) {
+function genExpression(node: Interpolation["content"], context) {
   const { push } = context
   push(`${node.content}`)
 }

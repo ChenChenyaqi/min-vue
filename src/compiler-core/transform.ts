@@ -6,7 +6,7 @@ type MixinNode = Element &
   Text & { codegenNode?: Element; helpers: string[] }
 
 type Options = {
-  nodeTransforms?: ((node: MixinNode) => {})[]
+  nodeTransforms?: ((node: any, context: any) => {})[]
 }
 
 export function transform(root: MixinNode, options: Options = {}) {
@@ -19,7 +19,12 @@ export function transform(root: MixinNode, options: Options = {}) {
 }
 
 function createRootCodegen(root: MixinNode) {
-  root.codegenNode = root.children[0]
+  const child = root.children[0]
+  if (child.type === NodeTypes.ELEMENT) {
+    root.codegenNode = child.codegenNode
+  } else {
+    root.codegenNode = root.children[0]
+  }
 }
 
 function createTransformContext(root: MixinNode, options: Options) {
@@ -38,7 +43,13 @@ function createTransformContext(root: MixinNode, options: Options) {
 type Context = ReturnType<typeof createTransformContext>
 
 function traverseNode(node: MixinNode, context: Context) {
-  context.nodeTransforms.forEach((fn) => fn(node))
+  const nodeTransforms = context.nodeTransforms
+  const exitFns: any[] = []
+  for (let i = 0; i < nodeTransforms.length; i++) {
+    const transform = nodeTransforms[i]
+    const onExit = transform(node, context)
+    if (onExit) exitFns.push(onExit)
+  }
 
   switch (node.type) {
     case NodeTypes.INTERPOLATION:
@@ -50,6 +61,11 @@ function traverseNode(node: MixinNode, context: Context) {
       break
     default:
       break
+  }
+
+  let i = exitFns.length
+  while (i--) {
+    exitFns[i]()
   }
 }
 
