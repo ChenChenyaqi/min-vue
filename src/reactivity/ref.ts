@@ -1,5 +1,5 @@
-import { hasChanged, isObject } from "../shared"
-import { trackEffect, triggerEffect } from "./effect"
+import { hasChanged, isArray, isObject } from "../shared"
+import { effect, trackEffect, triggerEffect } from "./effect"
 import { reactive } from "./reactive"
 
 class RefImpl {
@@ -56,4 +56,60 @@ export function proxyRefs(objectWithRefs) {
       }
     },
   })
+}
+
+export function toRef<T>(value: T)
+export function toRef<T extends object, K extends keyof T>(
+  source: T,
+  key?: K,
+  defaultValue?: unknown
+)
+export function toRef<T extends object, K extends keyof T>(
+  source: T,
+  key?: K,
+  defaultValue?: unknown
+) {
+  if (isRef(source)) {
+    return source
+  } else if (isObject(source) && arguments.length > 1) {
+    return propertyToRef(source, key!, defaultValue)
+  } else {
+    return ref(source)
+  }
+}
+
+function propertyToRef(
+  source: Record<string, any>,
+  key: any,
+  defaultValue?: unknown
+) {
+  const val = source[key]
+  return isRef(val) ? val : new ObjectRefImpl(source, key, defaultValue)
+}
+
+class ObjectRefImpl<T extends object, K extends keyof T> {
+  public readonly __v_isRef = true
+
+  constructor(
+    private readonly _object: T,
+    private readonly _key: K,
+    private readonly _defaultValue?: T[K]
+  ) {}
+
+  get value() {
+    const val = this._object[this._key]
+    return val === undefined ? this._defaultValue! : val
+  }
+
+  set value(newVal) {
+    this._object[this._key] = newVal
+  }
+}
+
+export function toRefs<T extends object>(object: T) {
+  const ret: any = isArray(object) ? new Array((object as any[]).length) : {}
+  for (const key in object) {
+    ret[key] = propertyToRef(object, key)
+  }
+  return ret
 }
