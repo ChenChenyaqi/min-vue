@@ -1,9 +1,9 @@
 const queue: any[] = []
-
+const activePreFlushCbs: any[] = []
 const p = Promise.resolve()
 let isFlushPending = false
 
-export function nextTick(fn) {
+export function nextTick(fn?) {
   return fn ? p.then(fn) : p
 }
 
@@ -15,6 +15,11 @@ export function queueJobs(job) {
   queueFlush()
 }
 
+export function queuePreFlushCb(cb) {
+  activePreFlushCbs.push(cb)
+  queueFlush()
+}
+
 function queueFlush() {
   if (isFlushPending) return
   isFlushPending = true
@@ -23,9 +28,15 @@ function queueFlush() {
 }
 
 function flushJobs() {
-  let job
   isFlushPending = false
+  flushPreFlushCbs()
+  let job
   while ((job = queue.shift())) {
     job && job()
+  }
+}
+function flushPreFlushCbs() {
+  for (let i = 0; i < activePreFlushCbs.length; i++) {
+    activePreFlushCbs[i]()
   }
 }
