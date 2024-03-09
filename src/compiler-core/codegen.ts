@@ -77,11 +77,29 @@ function genCompoundExpression(node, context) {
 
 function genElement(node: Element, context) {
   const { push, helper } = context
-  const { tag, children } = node
-  console.log(children)
-  push(`${helper(CREATE_ELEMENT_VNODE)}("${tag}", null, `)
-  genNode(children, context)
+  const { tag, children, props } = node
+  push(`${helper(CREATE_ELEMENT_VNODE)}(`)
+  genNodeList(genNullable([tag, props, children]), context)
   push(")")
+}
+
+function genNodeList(nodes: any[], context) {
+  const { push } = context
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i]
+    if (isString(node)) {
+      push(node)
+    } else {
+      genNode(node, context)
+    }
+    if (i < nodes.length - 1) {
+      push(", ")
+    }
+  }
+}
+
+function genNullable(args: any[]) {
+  return args.map((arg) => arg || "null")
 }
 
 function genText(node: Text, context) {

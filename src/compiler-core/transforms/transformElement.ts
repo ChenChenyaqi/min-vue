@@ -8,7 +8,7 @@ export function transformElement(node: Element, context) {
       // 中间处理层
 
       // tag
-      const vnodeTag = node.tag
+      const vnodeTag = `"${node.tag}"`
       // props
       const vnodeProps = null
       // children

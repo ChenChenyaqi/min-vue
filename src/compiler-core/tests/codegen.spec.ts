@@ -33,7 +33,6 @@ describe("codegen", () => {
         transformText,
       ],
     })
-    console.log("ast: ", ast)
 
     const { code } = generate(ast)
     // 快照测试

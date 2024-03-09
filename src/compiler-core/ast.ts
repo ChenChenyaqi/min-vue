@@ -1,6 +1,7 @@
 export interface Element {
   tag: string
   type: NodeTypes
+  props?: any
   children: any[]
   codegenNode?: any
 }
