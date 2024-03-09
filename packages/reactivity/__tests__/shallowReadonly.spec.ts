@@ -1,3 +1,4 @@
+import { vi } from "vitest"
 import { isReadonly, shallowReadonly } from "../src/reactive"
 
 describe("shallowReadonly", () => {
@@ -15,7 +16,7 @@ describe("shallowReadonly", () => {
   })
 
   it("shallowReadonly只读不可写", () => {
-    console.warn = jest.fn()
+    console.warn = vi.fn()
     const original = { foo: 1, bar: { baz: 2 } }
     const wrapped = shallowReadonly(original)
     expect(wrapped).not.toBe(original)

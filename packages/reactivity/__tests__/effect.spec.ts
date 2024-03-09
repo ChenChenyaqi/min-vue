@@ -1,5 +1,6 @@
 import { reactive } from "../src/reactive"
 import { effect, stop } from "../src/effect"
+import { vi } from "vitest"
 
 describe("effect", () => {
   it("effect里的函数读取一个响应式变量时，可以被收集起来，并且当响应式变量发生变化，能够重新执行", () => {
@@ -40,7 +41,7 @@ describe("effect", () => {
     // 3. 当执行runner时，会再次执行fn
     let dummy
     let run: any
-    const scheduler = jest.fn(() => {
+    const scheduler = vi.fn(() => {
       run = runner
     })
     const obj = reactive({ foo: 1 })
@@ -67,7 +68,7 @@ describe("effect", () => {
     // 当调用stop时，onStop会执行
     let dummy
     const obj = reactive({ prop: 1 })
-    const onStop = jest.fn(() => {})
+    const onStop = vi.fn(() => {})
     const runner = effect(
       () => {
         dummy = obj.prop
@@ -94,8 +95,8 @@ describe("effect", () => {
     const data = { foo: true, bar: true }
     const obj = reactive(data)
     let temp1, temp2
-    const effectFn1 = jest.fn()
-    const effectFn2 = jest.fn()
+    const effectFn1 = vi.fn()
+    const effectFn2 = vi.fn()
     effect(() => {
       effect(() => {
         temp2 = obj.bar
@@ -114,8 +115,8 @@ describe("effect", () => {
     const data = { foo: true, bar: true }
     const obj = reactive(data)
     let temp1, temp2
-    const effectFn1 = jest.fn()
-    const effectFn2 = jest.fn()
+    const effectFn1 = vi.fn()
+    const effectFn2 = vi.fn()
     effect(() => {
       effect(() => {
         temp2 = obj.bar

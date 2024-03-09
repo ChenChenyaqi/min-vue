@@ -1,8 +1,9 @@
+import { vi } from "vitest"
 import { readonly, isReadonly, isProxy } from "../src/reactive"
 
 describe("readonly", () => {
   it("readonly只读不可写", () => {
-    console.warn = jest.fn()
+    console.warn = vi.fn()
     const original = { foo: 1, bar: { baz: 2 } }
     const wrapped = readonly(original)
     expect(wrapped).not.toBe(original)

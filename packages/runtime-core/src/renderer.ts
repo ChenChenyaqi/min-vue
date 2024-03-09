@@ -1,4 +1,4 @@
-import { effect } from "@min-vue/reactivity/src/effect"
+import { effect } from "@min-vue/reactivity"
 import { isArray, isObject, isString } from "@min-vue/shared"
 import {
   ComponentInstance,
