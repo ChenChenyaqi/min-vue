@@ -3,3 +3,4 @@
 /lib
 /.VSCodeCounter
 /.vscode
+/packages/*/node_modules
