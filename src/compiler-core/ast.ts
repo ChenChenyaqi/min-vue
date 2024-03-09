@@ -1,3 +1,5 @@
+import { CREATE_ELEMENT_VNODE } from "./runtimeHelpers"
+
 export interface Element {
   tag: string
   type: NodeTypes
@@ -33,4 +35,20 @@ export enum NodeTypes {
 export enum TagType {
   START,
   END,
+}
+
+export function createVNodeCall(
+  context,
+  type: NodeTypes,
+  tag,
+  props,
+  children
+) {
+  context.helper(CREATE_ELEMENT_VNODE)
+  return {
+    type,
+    tag,
+    props,
+    children,
+  }
 }

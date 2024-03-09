@@ -1,4 +1,5 @@
 import { Element, NodeTypes } from "../ast"
+import { isText } from "../utils"
 
 export function transformText(node: Element) {
   if (node.type === NodeTypes.ELEMENT) {
@@ -30,8 +31,4 @@ export function transformText(node: Element) {
       }
     }
   }
-}
-
-function isText(node: Element) {
-  return node.type === NodeTypes.TEXT || node.type === NodeTypes.INTERPOLATION
 }
