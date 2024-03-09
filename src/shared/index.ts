@@ -1,3 +1,5 @@
+export * from "./toDisplayString"
+
 export function extend(origin, ...target) {
   return Object.assign(origin, ...target)
 }

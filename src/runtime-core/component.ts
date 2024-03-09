@@ -75,8 +75,6 @@ function setupStatefulComponent(instance: ComponentInstance) {
 }
 
 function handleSetupResult(instance: ComponentInstance, setupResult: object) {
-  // TODO function
-
   if (typeof setupResult === "object") {
     instance.setupState = setupResult
   }
@@ -86,6 +84,11 @@ function handleSetupResult(instance: ComponentInstance, setupResult: object) {
 
 function finishComponentSetup(instance: ComponentInstance) {
   const Component = instance.type as Component
+  if (compiler && !Component.render) {
+    if (Component.template) {
+      Component.render = compiler(Component.template)
+    }
+  }
   instance.render = Component.render
 }
 
@@ -97,4 +100,10 @@ export function getCurrentInstance() {
 
 function setCurrentInstance(instance: ComponentInstance | null) {
   currentInstance = instance
+}
+
+let compiler
+
+export function registerRuntimeCompiler(_compiler) {
+  compiler = _compiler
 }

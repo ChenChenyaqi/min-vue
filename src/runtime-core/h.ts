@@ -3,7 +3,8 @@ import { createVNode, VNode } from "./vnode"
 type Children = string | VNode[] | VNode
 
 export interface Component {
-  render: () => VNode
+  render: (_ctx) => VNode
+  template?: string
   setup: (props: object, { emit }) => object
 }
 

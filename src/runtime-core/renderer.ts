@@ -363,7 +363,10 @@ export function createRenderer(options: Options) {
         if (!instance.isMounted) {
           // 挂载
           const { proxy } = instance
-          const subTree = (instance.subTree = instance.render!.call(proxy))
+          const subTree = (instance.subTree = instance.render!.call(
+            proxy,
+            proxy
+          ))
 
           patch(subTree, null, container, instance, anchor)
           // 所有的element都已经处理完
@@ -379,7 +382,7 @@ export function createRenderer(options: Options) {
           }
 
           const { proxy } = instance
-          const subTree = instance.render!.call(proxy)
+          const subTree = instance.render!.call(proxy, proxy)
           const preSubTree = instance.subTree
           instance.subTree = subTree
 

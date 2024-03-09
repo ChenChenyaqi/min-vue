@@ -11,6 +11,8 @@ export interface VNode {
   key?: string
 }
 
+export { createVNode as createElementVNode }
+
 export function createVNode(
   type: string | Component | Symbol,
   props?: any,
