@@ -1,4 +1,4 @@
-import { h } from "../../lib/guide-min-vue.esm.js"
+import { h } from "../../packages/vue/dist/guide-min-vue.esm.js"
 
 export const App = {
   render() {

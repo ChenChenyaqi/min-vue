@@ -1,4 +1,8 @@
-import { h, provide, inject } from "../../lib/guide-min-vue.esm.js"
+import {
+  h,
+  provide,
+  inject,
+} from "../../packages/vue/dist/guide-min-vue.esm.js"
 
 const Provider = {
   name: "Provider",

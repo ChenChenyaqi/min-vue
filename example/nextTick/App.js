@@ -3,7 +3,7 @@ import {
   h,
   ref,
   nextTick,
-} from "../../lib/guide-min-vue.esm.js"
+} from "../../packages/vue/dist/guide-min-vue.esm.js"
 
 export const App = {
   name: "App",

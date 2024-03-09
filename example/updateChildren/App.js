@@ -1,4 +1,4 @@
-import { h, ref } from "../../lib/guide-min-vue.esm.js"
+import { h, ref } from "../../packages/vue/dist/guide-min-vue.esm.js"
 import TextToText from "./TextToText.js"
 import TextToArray from "./TextToArray.js"
 import ArrayToText from "./ArrayToText.js"

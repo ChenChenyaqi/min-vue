@@ -1,4 +1,4 @@
-import { h, ref } from "../../lib/guide-min-vue.esm.js"
+import { h, ref } from "../../packages/vue/dist/guide-min-vue.esm.js"
 import ComponentToComponent from "./ComponentToComponent.js"
 
 export const App = {

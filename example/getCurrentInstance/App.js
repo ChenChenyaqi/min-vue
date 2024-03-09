@@ -2,7 +2,7 @@ import {
   createTextVNode,
   h,
   getCurrentInstance,
-} from "../../lib/guide-min-vue.esm.js"
+} from "../../packages/vue/dist/guide-min-vue.esm.js"
 import { Foo } from "./Foo.js"
 
 export const App = {

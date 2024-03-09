@@ -1,4 +1,4 @@
-import { h, renderSlots } from "../../lib/guide-min-vue.esm.js"
+import { h, renderSlots } from "../../packages/vue/dist/guide-min-vue.esm.js"
 
 export const Foo = {
   setup(props, { emit }) {

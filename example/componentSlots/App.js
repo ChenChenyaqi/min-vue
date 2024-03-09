@@ -1,4 +1,7 @@
-import { createTextVNode, h } from "../../lib/guide-min-vue.esm.js"
+import {
+  createTextVNode,
+  h,
+} from "../../packages/vue/dist/guide-min-vue.esm.js"
 import { Foo } from "./Foo.js"
 
 export const App = {
