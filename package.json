@@ -8,10 +8,8 @@
     "build": "rollup -c rollup.config.ts --configPlugin typescript"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
-    "@babel/preset-env": "^7.23.7",
-    "@babel/preset-typescript": "^7.23.3",
     "@rollup/plugin-typescript": "^11.1.6",
+    "@types/node": "^20.11.25",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.56.0",
