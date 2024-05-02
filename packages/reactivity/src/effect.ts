@@ -1,10 +1,10 @@
 import { extend } from "@min-vue/shared"
+import { recordEffectScope } from "./effectScope"
 
 // 当前的副作用函数
 let activeEffect: null | ReactiveEffect = null
 // 收集effect函数
 const bucket = new WeakMap()
-let shouldTrack = false
 export class ReactiveEffect {
   private _fn: any
   // 是否没有stop过
@@ -15,6 +15,7 @@ export class ReactiveEffect {
   constructor(fn: Function, public scheduler?: Function) {
     this._fn = fn
     this.scheduler = scheduler
+    recordEffectScope(this)
   }
 
   run() {
@@ -22,11 +23,8 @@ export class ReactiveEffect {
       return this._fn()
     }
 
-    shouldTrack = true
-
     activeEffect = this
     const res = this._fn()
-    shouldTrack = false
     activeEffect = null
     return res
   }
