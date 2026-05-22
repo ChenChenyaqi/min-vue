@@ -1,4 +1,4 @@
-import { ReactiveEffect } from "./effect"
+import { ReactiveEffect } from './effect'
 
 let activeEffectScope
 export class EffectScope {
@@ -19,7 +19,7 @@ export class EffectScope {
   stop() {
     if (this._active) {
       this._active = false
-      this.effects.forEach((eff) => eff.stop())
+      this.effects.forEach(eff => eff.stop())
     }
   }
 }

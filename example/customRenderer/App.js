@@ -1,8 +1,8 @@
-import { h } from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { h } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 export const App = {
   render() {
-    return h("rect", { x: this.x, y: this.y })
+    return h('rect', { x: this.x, y: this.y })
   },
   setup() {
     return {

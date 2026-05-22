@@ -1,16 +1,11 @@
-import {
-  getCurrentInstance,
-  h,
-  ref,
-  nextTick,
-} from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { getCurrentInstance, h, ref, nextTick } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 export const App = {
-  name: "App",
+  name: 'App',
   setup() {
-    const msg = ref("hello world")
+    const msg = ref('hello world')
     const handleClick = () => {
-      msg.value = "你好 世界!"
+      msg.value = '你好 世界!'
     }
     const instance = getCurrentInstance()
 
@@ -34,9 +29,9 @@ export const App = {
     }
   },
   render() {
-    return h("div", {}, [
-      h("span", "count: " + this.count),
-      h("button", { onClick: this.handleClick2 }, "click me"),
+    return h('div', {}, [
+      h('span', 'count: ' + this.count),
+      h('button', { onClick: this.handleClick2 }, 'click me'),
     ])
   },
 }

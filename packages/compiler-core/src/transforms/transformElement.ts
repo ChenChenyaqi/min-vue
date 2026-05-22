@@ -1,4 +1,4 @@
-import { Element, NodeTypes, createVNodeCall } from "../ast"
+import { Element, NodeTypes, createVNodeCall } from '../ast'
 
 export function transformElement(node: Element, context) {
   if (node.type === NodeTypes.ELEMENT) {
@@ -13,13 +13,7 @@ export function transformElement(node: Element, context) {
       const children = node.children
       const vnodeChildren = children[0]
 
-      node.codegenNode = createVNodeCall(
-        context,
-        node.type,
-        vnodeTag,
-        vnodeProps,
-        vnodeChildren
-      )
+      node.codegenNode = createVNodeCall(context, node.type, vnodeTag, vnodeProps, vnodeChildren)
     }
   }
 }

@@ -1,22 +1,22 @@
-import { proxyRefs } from "@min-vue/reactivity"
-import { shallowReadonly } from "@min-vue/reactivity"
-import { emit } from "./componentEmit"
-import { initProps } from "./componentProps"
-import { PublicInstanceProxyHandlers } from "./componentPublicInstance"
-import { initSlots } from "./componentSlots"
-import { Component } from "./h"
-import { VNode } from "./vnode"
+import { proxyRefs } from '@min-vue/reactivity'
+import { shallowReadonly } from '@min-vue/reactivity'
+import { emit } from './componentEmit'
+import { initProps } from './componentProps'
+import { PublicInstanceProxyHandlers } from './componentPublicInstance'
+import { initSlots } from './componentSlots'
+import { Component } from './h'
+import { VNode } from './vnode'
 
 export interface ComponentInstance {
   vnode: VNode
-  type: VNode["type"]
+  type: VNode['type']
   props: object
   emit: Function
   slots: object
   provides?: object
   parent?: ComponentInstance
   setupState?: object
-  render?: Component["render"]
+  render?: Component['render']
   proxy?: any
   isMounted: boolean
   subTree: VNode | null
@@ -26,7 +26,7 @@ export interface ComponentInstance {
 
 export function createComponentInstance(
   vnode: VNode,
-  parent?: ComponentInstance
+  parent?: ComponentInstance,
 ): ComponentInstance {
   const component: ComponentInstance = {
     vnode,
@@ -66,7 +66,7 @@ function setupStatefulComponent(instance: ComponentInstance) {
     const setupResult = proxyRefs(
       setup(shallowReadonly(instance.props), {
         emit: instance.emit,
-      })
+      }),
     )
     setCurrentInstance(null)
 
@@ -75,7 +75,7 @@ function setupStatefulComponent(instance: ComponentInstance) {
 }
 
 function handleSetupResult(instance: ComponentInstance, setupResult: object) {
-  if (typeof setupResult === "object") {
+  if (typeof setupResult === 'object') {
     instance.setupState = setupResult
   }
 

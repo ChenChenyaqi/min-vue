@@ -1,5 +1,5 @@
-import { extend } from "@min-vue/shared"
-import { recordEffectScope } from "./effectScope"
+import { extend } from '@min-vue/shared'
+import { recordEffectScope } from './effectScope'
 
 // 当前的副作用函数
 let activeEffect: null | ReactiveEffect = null
@@ -12,7 +12,10 @@ export class ReactiveEffect {
   deps: Set<ReactiveEffect>[] = []
   onStop: Function | undefined
 
-  constructor(fn: Function, public scheduler?: Function) {
+  constructor(
+    fn: Function,
+    public scheduler?: Function,
+  ) {
     this._fn = fn
     this.scheduler = scheduler
     recordEffectScope(this)
@@ -90,7 +93,7 @@ export function triggerEffect(depsSet: any) {
         effectToRun.add(effect)
       }
     })
-  effectToRun.forEach((effect) => {
+  effectToRun.forEach(effect => {
     if (effect.scheduler) {
       effect.scheduler()
     } else {

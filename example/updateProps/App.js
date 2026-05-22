@@ -1,12 +1,12 @@
-import { h, ref } from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { h, ref } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 export const App = {
-  name: "App",
+  name: 'App',
   setup() {
     const flag = ref(true)
     const handleClick = () => {
       flag.value = !flag.value
-      console.log("click!")
+      console.log('click!')
     }
     return {
       flag,
@@ -16,17 +16,17 @@ export const App = {
   render() {
     return this.flag
       ? h(
-          "div",
+          'div',
           {
-            id: "root",
+            id: 'root',
             onClick: this.handleClick,
-            style: "background-color: #bfa",
+            style: 'background-color: #bfa',
           },
-          "click me"
+          'click me',
         )
-      : h("div", {
+      : h('div', {
           onClick: this.handleClick,
-          style: "background-color: #afe",
+          style: 'background-color: #afe',
         })
   },
 }

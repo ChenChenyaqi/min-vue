@@ -1,7 +1,7 @@
-import { ComponentInstance } from "./component"
-import { Component } from "./h"
+import { ComponentInstance } from './component'
+import { Component } from './h'
 
-export const Text = Symbol("Text")
+export const Text = Symbol('Text')
 export interface VNode {
   type: string | Component | Symbol
   props: object
@@ -16,7 +16,7 @@ export { createVNode as createElementVNode }
 export function createVNode(
   type: string | Component | Symbol,
   props?: any,
-  children?: VNode[] | string
+  children?: VNode[] | string,
 ): VNode {
   const vnode: VNode = {
     type,

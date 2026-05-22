@@ -1,5 +1,5 @@
-import { createRenderer } from "@min-vue/runtime-core"
-export * from "@min-vue/runtime-core"
+import { createRenderer } from '@min-vue/runtime-core'
+export * from '@min-vue/runtime-core'
 
 function createElement(type: string) {
   return document.createElement(type)

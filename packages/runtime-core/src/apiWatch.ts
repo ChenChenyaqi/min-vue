@@ -1,5 +1,5 @@
-import { ReactiveEffect } from "../../reactivity/src/effect"
-import { queuePreFlushCb } from "./scheduler"
+import { ReactiveEffect } from '../../reactivity/src/effect'
+import { queuePreFlushCb } from './scheduler'
 export function watchEffect(source) {
   function job() {
     effect.run()

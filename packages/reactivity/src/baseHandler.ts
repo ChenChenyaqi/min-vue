@@ -1,6 +1,6 @@
-import { extend, isObject } from "@min-vue/shared"
-import { track, trigger } from "./effect"
-import { ReactiveFlags, reactive, readonly } from "./reactive"
+import { extend, isObject } from '@min-vue/shared'
+import { track, trigger } from './effect'
+import { ReactiveFlags, reactive, readonly } from './reactive'
 
 const get = createGetter()
 const set = createSetter()

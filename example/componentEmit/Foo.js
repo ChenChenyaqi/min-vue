@@ -1,13 +1,13 @@
-import { h } from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { h } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 export const Foo = {
   setup(props, { emit }) {
     console.log(props)
 
     const emitAdd = () => {
-      console.log("emit add")
-      emit("add", 1, 2)
-      emit("addFoo", 1, 2)
+      console.log('emit add')
+      emit('add', 1, 2)
+      emit('addFoo', 1, 2)
     }
 
     return {
@@ -17,15 +17,15 @@ export const Foo = {
 
   render() {
     const btn = h(
-      "button",
+      'button',
       {
         onClick: this.emitAdd,
       },
-      "emitAdd"
+      'emitAdd',
     )
 
-    const foo = h("p", {}, "foo")
+    const foo = h('p', {}, 'foo')
 
-    return h("div", {}, [foo, btn])
+    return h('div', {}, [foo, btn])
   },
 }

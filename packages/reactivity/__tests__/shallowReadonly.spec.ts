@@ -1,8 +1,8 @@
-import { vi } from "vitest"
-import { isReadonly, shallowReadonly } from "../src/reactive"
+import { vi } from 'vitest'
+import { isReadonly, shallowReadonly } from '../src/reactive'
 
-describe("shallowReadonly", () => {
-  it("happy path", () => {
+describe('shallowReadonly', () => {
+  it('happy path', () => {
     const original = {
       foo: 1,
       bar: {
@@ -15,7 +15,7 @@ describe("shallowReadonly", () => {
     expect(isReadonly(observed.bar)).toBe(false)
   })
 
-  it("shallowReadonly只读不可写", () => {
+  it('shallowReadonly只读不可写', () => {
     console.warn = vi.fn()
     const original = { foo: 1, bar: { baz: 2 } }
     const wrapped = shallowReadonly(original)

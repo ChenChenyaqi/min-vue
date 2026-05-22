@@ -1,4 +1,4 @@
-import { createVNode, VNode } from "./vnode"
+import { createVNode, VNode } from './vnode'
 
 type Children = string | VNode[] | VNode
 
@@ -15,7 +15,7 @@ export function h(type: string, props: object, children: Children)
 export function h(
   type: string | Component,
   propsOrChildren?: object | Children,
-  _children?: Children
+  _children?: Children,
 ) {
   let props
   let children
@@ -36,9 +36,9 @@ export function h(
 }
 
 function isProps(propsOrChildren?: object | Children) {
-  return typeof propsOrChildren === "object" && !Array.isArray(propsOrChildren)
+  return typeof propsOrChildren === 'object' && !Array.isArray(propsOrChildren)
 }
 
 function isChildren(propsOrChildren?: object | Children) {
-  return typeof propsOrChildren === "string" || Array.isArray(propsOrChildren)
+  return typeof propsOrChildren === 'string' || Array.isArray(propsOrChildren)
 }

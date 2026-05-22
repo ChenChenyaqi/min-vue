@@ -1,4 +1,4 @@
-import { VNode } from "./vnode"
+import { VNode } from './vnode'
 
 export function shouldUpdateComponent(newVNode: VNode, oldVNode: VNode | null) {
   const { props: oldProps } = oldVNode || {}

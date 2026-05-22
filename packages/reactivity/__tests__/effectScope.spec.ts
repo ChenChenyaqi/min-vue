@@ -1,24 +1,24 @@
-import { it, expect, describe, vi } from "vitest"
-import { EffectScope } from "../src/effectScope"
-import { effect, reactive } from "../src"
+import { it, expect, describe, vi } from 'vitest'
+import { EffectScope } from '../src/effectScope'
+import { effect, reactive } from '../src'
 
-describe("test effectScope", () => {
-  it("should run", () => {
+describe('test effectScope', () => {
+  it('should run', () => {
     const fnSpy = vi.fn(() => {})
     new EffectScope().run(fnSpy)
     expect(fnSpy).toHaveBeenCalledTimes(1)
   })
 
-  it("should accept zero argument", () => {
+  it('should accept zero argument', () => {
     const scope = new EffectScope()
     expect(scope.effects.length).toBe(0)
   })
 
-  it("should return run value", () => {
+  it('should return run value', () => {
     expect(new EffectScope().run(() => 1)).toBe(1)
   })
 
-  it("should work w/ active property", () => {
+  it('should work w/ active property', () => {
     const scope = new EffectScope()
     scope.run(() => 1)
     expect(scope.active).toBe(true)
@@ -26,7 +26,7 @@ describe("test effectScope", () => {
     expect(scope.active).toBe(false)
   })
 
-  it("should collect the effects", () => {
+  it('should collect the effects', () => {
     const scope = new EffectScope()
     scope.run(() => {
       let dummy
@@ -41,7 +41,7 @@ describe("test effectScope", () => {
     expect(scope.effects.length).toBe(1)
   })
 
-  it("stop", () => {
+  it('stop', () => {
     let dummy, doubled
     const counter = reactive({ num: 0 })
 

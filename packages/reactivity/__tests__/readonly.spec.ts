@@ -1,8 +1,8 @@
-import { vi } from "vitest"
-import { readonly, isReadonly, isProxy } from "../src/reactive"
+import { vi } from 'vitest'
+import { readonly, isReadonly, isProxy } from '../src/reactive'
 
-describe("readonly", () => {
-  it("readonly只读不可写", () => {
+describe('readonly', () => {
+  it('readonly只读不可写', () => {
     console.warn = vi.fn()
     const original = { foo: 1, bar: { baz: 2 } }
     const wrapped = readonly(original)
@@ -15,7 +15,7 @@ describe("readonly", () => {
     expect(console.warn).toHaveBeenCalled()
   })
 
-  it("isReadonly", () => {
+  it('isReadonly', () => {
     const original = { foo: 1, bar: { baz: 2 } }
     const wrapped = readonly(original)
 
@@ -23,7 +23,7 @@ describe("readonly", () => {
     expect(isReadonly(original)).toBe(false)
   })
 
-  it("嵌套reactive", () => {
+  it('嵌套reactive', () => {
     const original = {
       foo: 1,
       bar: {

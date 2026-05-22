@@ -1,12 +1,12 @@
-import { h, ref } from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { h, ref } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 export default {
-  name: "TextToArray",
+  name: 'TextToArray',
   setup() {
     const flag = ref(true)
 
     const handleClick = () => {
-      console.log("TextToArray click")
+      console.log('TextToArray click')
       flag.value = !flag.value
     }
     return {
@@ -16,7 +16,7 @@ export default {
   },
   render() {
     return this.flag
-      ? h("div", { onClick: this.handleClick }, "click me")
-      : h("div", {}, [h("p", {}, "我是一个p"), "我是一个文本"])
+      ? h('div', { onClick: this.handleClick }, 'click me')
+      : h('div', {}, [h('p', {}, '我是一个p'), '我是一个文本'])
   },
 }

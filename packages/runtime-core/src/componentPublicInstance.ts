@@ -1,9 +1,9 @@
-import { hasOwn } from "@min-vue/shared"
+import { hasOwn } from '@min-vue/shared'
 
 const publicPropertiesMap = {
-  $el: (i) => i.vnode.el,
-  $slots: (i) => i.slots,
-  $props: (i) => i.props,
+  $el: i => i.vnode.el,
+  $slots: i => i.slots,
+  $props: i => i.props,
 }
 
 export const PublicInstanceProxyHandlers = {

@@ -1,15 +1,15 @@
-export * from "./toDisplayString"
+export * from './toDisplayString'
 
 export function extend(origin, ...target) {
   return Object.assign(origin, ...target)
 }
 
 export function isObject(value) {
-  return value !== null && typeof value === "object"
+  return value !== null && typeof value === 'object'
 }
 
 export function isString(value) {
-  return typeof value === "string"
+  return typeof value === 'string'
 }
 
 export function isArray(value) {
@@ -20,11 +20,9 @@ export function hasChanged(value, newValue) {
   return !Object.is(value, newValue)
 }
 
-export function convertStringToHTMLElement(
-  rootContainer: string | Element
-): Element {
+export function convertStringToHTMLElement(rootContainer: string | Element): Element {
   let rootElement = rootContainer
-  if (typeof rootContainer === "string") {
+  if (typeof rootContainer === 'string') {
     rootElement = document.querySelector(rootContainer) as Element
   }
   return rootElement as Element
@@ -36,7 +34,7 @@ export function hasOwn(val: object, key: string) {
 
 export function camelize(str: string) {
   return str.replace(/-(\w)/g, (_, c: string) => {
-    return c ? c.toUpperCase() : ""
+    return c ? c.toUpperCase() : ''
   })
 }
 
@@ -45,5 +43,5 @@ export function capitalize(str: string) {
 }
 
 export function toHandlerKey(str: string) {
-  return str ? "on" + capitalize(str) : ""
+  return str ? 'on' + capitalize(str) : ''
 }

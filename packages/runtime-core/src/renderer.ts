@@ -1,16 +1,12 @@
-import { effect } from "@min-vue/reactivity"
-import { isArray, isObject, isString } from "@min-vue/shared"
-import {
-  ComponentInstance,
-  createComponentInstance,
-  setupComponent,
-} from "./component"
-import { shouldUpdateComponent } from "./componentUpdateUtils"
-import { createAppAPI } from "./createApp"
-import { queueJobs } from "./scheduler"
-import { Text, VNode } from "./vnode"
+import { effect } from '@min-vue/reactivity'
+import { isArray, isObject, isString } from '@min-vue/shared'
+import { ComponentInstance, createComponentInstance, setupComponent } from './component'
+import { shouldUpdateComponent } from './componentUpdateUtils'
+import { createAppAPI } from './createApp'
+import { queueJobs } from './scheduler'
+import { Text, VNode } from './vnode'
 
-export const Fragment = Symbol("Fragment")
+export const Fragment = Symbol('Fragment')
 
 interface Options {
   createElement: (type: string) => any
@@ -40,7 +36,7 @@ export function createRenderer(options: Options) {
     preVNode: VNode | null,
     container: Element,
     parentComponent?: ComponentInstance,
-    anchor?: Element
+    anchor?: Element,
   ) {
     switch (newVNode.type) {
       case Fragment:
@@ -50,7 +46,7 @@ export function createRenderer(options: Options) {
         processText(newVNode, preVNode, container, anchor)
         break
       default:
-        if (typeof newVNode.type === "string") {
+        if (typeof newVNode.type === 'string') {
           // 处理组件
           processElement(newVNode, preVNode, container, parentComponent, anchor)
         } else if (isObject(newVNode.type)) {
@@ -63,12 +59,10 @@ export function createRenderer(options: Options) {
     newVNode: VNode,
     preVNode: VNode | null,
     container: Element,
-    anchor?: Element
+    anchor?: Element,
   ) {
     const { children } = newVNode
-    const textNode = (newVNode.el = hostCreateTextNode(
-      children as string
-    ) as any)
+    const textNode = (newVNode.el = hostCreateTextNode(children as string) as any)
     hostInsert(textNode, container, anchor)
   }
 
@@ -77,12 +71,10 @@ export function createRenderer(options: Options) {
     preVNode: VNode | null,
     container: Element,
     parentComponent?: ComponentInstance,
-    anchor?: Element
+    anchor?: Element,
   ) {
-    if (typeof newVNode.children === "string") return
-    newVNode.children.forEach((child) =>
-      patch(child, null, container, parentComponent, anchor)
-    )
+    if (typeof newVNode.children === 'string') return
+    newVNode.children.forEach(child => patch(child, null, container, parentComponent, anchor))
   }
 
   function processElement(
@@ -90,7 +82,7 @@ export function createRenderer(options: Options) {
     preVNode: VNode | null,
     container: Element,
     parentComponent?: ComponentInstance,
-    anchor?: Element
+    anchor?: Element,
   ) {
     if (!preVNode) {
       mountElement(newVNode, container, parentComponent, anchor)
@@ -103,7 +95,7 @@ export function createRenderer(options: Options) {
     newVNode: VNode,
     preVNode: VNode,
     parentComponent?: ComponentInstance,
-    anchor?: Element
+    anchor?: Element,
   ) {
     const oldProps = preVNode.props || EMPTY_OBJ
     const newProps = newVNode.props || EMPTY_OBJ
@@ -118,7 +110,7 @@ export function createRenderer(options: Options) {
     newVNode: VNode,
     el: Element,
     parentComponent?: ComponentInstance,
-    anchor?: Element
+    anchor?: Element,
   ) {
     const newChildren = newVNode.children
     const preChildren = preVNode.children
@@ -135,7 +127,7 @@ export function createRenderer(options: Options) {
       }
     } else if (isArray(newChildren)) {
       if (isString(preChildren)) {
-        hostSetElementText(el, "")
+        hostSetElementText(el, '')
         mountChildren(newChildren as VNode[], el, parentComponent, anchor)
       } else if (isArray(preChildren)) {
         // diff array
@@ -144,7 +136,7 @@ export function createRenderer(options: Options) {
           preChildren as VNode[],
           el,
           parentComponent,
-          anchor
+          anchor,
         )
       }
     }
@@ -159,7 +151,7 @@ export function createRenderer(options: Options) {
     preChildren: VNode[],
     el: Element,
     parentComponent,
-    parentAnchor?: Element
+    parentAnchor?: Element,
   ) {
     // 四个索引值
     let preStartIndex = 0
@@ -197,9 +189,7 @@ export function createRenderer(options: Options) {
         newStartVNode = newChildren[++newStartIndex]
       } else {
         // 处理非理性的情况
-        const indexInPre = preChildren.findIndex(
-          (node) => node.key === newStartVNode.key
-        )
+        const indexInPre = preChildren.findIndex(node => node.key === newStartVNode.key)
 
         if (indexInPre > 0) {
           // 能在preChildren中找到newStarVNode，说明可以复用，移动旧节点
@@ -209,13 +199,7 @@ export function createRenderer(options: Options) {
           ;(preChildren as any)[indexInPre] = undefined
         } else {
           // 找不到，说明是新的节点，进行挂载
-          patch(
-            newStartVNode,
-            null,
-            el,
-            parentComponent,
-            preStartVNode.el as Element
-          )
+          patch(newStartVNode, null, el, parentComponent, preStartVNode.el as Element)
         }
         newStartVNode = newChildren[++newStartIndex]
       }
@@ -225,13 +209,7 @@ export function createRenderer(options: Options) {
     if (preEndIndex < preStartIndex && newStartIndex <= newEndIndex) {
       // 有新增的节点要处理
       for (let i = newStartIndex; i <= newEndIndex; i++) {
-        patch(
-          newChildren[i],
-          null,
-          el,
-          parentComponent,
-          preStartVNode.el as Element
-        )
+        patch(newChildren[i], null, el, parentComponent, preStartVNode.el as Element)
       }
     } else if (newEndIndex < newStartIndex && preStartIndex <= preEndIndex) {
       // 有卸载的节点要处理
@@ -278,11 +256,9 @@ export function createRenderer(options: Options) {
     initialVnode: VNode,
     container: Element,
     parentComponent?: ComponentInstance,
-    anchor?: Element
+    anchor?: Element,
   ) {
-    const el = (initialVnode.el = hostCreateElement(
-      initialVnode.type as string
-    ))
+    const el = (initialVnode.el = hostCreateElement(initialVnode.type as string))
     const { children, props } = initialVnode
 
     // 处理props
@@ -291,7 +267,7 @@ export function createRenderer(options: Options) {
       hostPatchProp(el, key, null, value)
     }
     // 处理children
-    if (typeof children === "string") {
+    if (typeof children === 'string') {
       el.textContent = children as string
     } else if (Array.isArray(children)) {
       mountChildren(children, el, parentComponent, anchor)
@@ -304,9 +280,9 @@ export function createRenderer(options: Options) {
     children: VNode[],
     el: Element,
     parentComponent?: ComponentInstance,
-    anchor?: Element
+    anchor?: Element,
   ) {
-    children.forEach((child) => {
+    children.forEach(child => {
       patch(child, null, el, parentComponent, anchor)
     })
   }
@@ -316,7 +292,7 @@ export function createRenderer(options: Options) {
     oldVNode: VNode | null,
     container: Element,
     parentComponent?: ComponentInstance,
-    anchor?: Element
+    anchor?: Element,
   ) {
     if (!oldVNode) {
       mountComponent(newVNode, container, parentComponent, anchor)
@@ -343,7 +319,7 @@ export function createRenderer(options: Options) {
     vnode: VNode,
     container: Element,
     parentComponent?: ComponentInstance,
-    anchor?: Element
+    anchor?: Element,
   ) {
     const instance = createComponentInstance(vnode, parentComponent)
     vnode.component = instance
@@ -356,17 +332,14 @@ export function createRenderer(options: Options) {
     instance: ComponentInstance,
     vnode: VNode,
     container: Element,
-    anchor?: Element
+    anchor?: Element,
   ) {
     instance.update = effect(
       () => {
         if (!instance.isMounted) {
           // 挂载
           const { proxy } = instance
-          const subTree = (instance.subTree = instance.render!.call(
-            proxy,
-            proxy
-          ))
+          const subTree = (instance.subTree = instance.render!.call(proxy, proxy))
 
           patch(subTree, null, container, instance, anchor)
           // 所有的element都已经处理完
@@ -393,14 +366,11 @@ export function createRenderer(options: Options) {
         scheduler: () => {
           queueJobs(instance.update)
         },
-      }
+      },
     )
   }
 
-  function updateComponentPreRender(
-    instance: ComponentInstance,
-    newVNode: VNode
-  ) {
+  function updateComponentPreRender(instance: ComponentInstance, newVNode: VNode) {
     instance.vnode = newVNode
     instance.next = undefined
     instance.props = newVNode.props

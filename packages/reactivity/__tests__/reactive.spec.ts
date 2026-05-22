@@ -1,7 +1,7 @@
-import { reactive, isReactive, isProxy } from "../src/reactive"
+import { reactive, isReactive, isProxy } from '../src/reactive'
 
-describe("reactive", () => {
-  it("happy path", () => {
+describe('reactive', () => {
+  it('happy path', () => {
     const original = { foo: 1 }
     const observed = reactive(original)
 
@@ -10,7 +10,7 @@ describe("reactive", () => {
     expect(isProxy(observed)).toBe(true)
   })
 
-  it("isReactive", () => {
+  it('isReactive', () => {
     const original = { foo: 1 }
     const observed = reactive(original)
 
@@ -18,7 +18,7 @@ describe("reactive", () => {
     expect(isReactive(original)).toBe(false)
   })
 
-  it("嵌套reactive", () => {
+  it('嵌套reactive', () => {
     const original = {
       foo: 1,
       bar: {

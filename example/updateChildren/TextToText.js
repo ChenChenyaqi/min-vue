@@ -1,12 +1,12 @@
-import { h, ref } from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { h, ref } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 export default {
-  name: "TextToText",
+  name: 'TextToText',
   setup() {
     const flag = ref(true)
 
     const handleClick = () => {
-      console.log("TextToText  click")
+      console.log('TextToText  click')
       flag.value = !flag.value
     }
     return {
@@ -16,7 +16,7 @@ export default {
   },
   render() {
     return this.flag
-      ? h("div", { onClick: this.handleClick }, "click me")
-      : h("div", {}, "click me!!!")
+      ? h('div', { onClick: this.handleClick }, 'click me')
+      : h('div', {}, 'click me!!!')
   },
 }

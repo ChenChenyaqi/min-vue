@@ -1,9 +1,9 @@
-import { reactive } from "../src/reactive"
-import { effect, stop } from "../src/effect"
-import { vi } from "vitest"
+import { reactive } from '../src/reactive'
+import { effect, stop } from '../src/effect'
+import { vi } from 'vitest'
 
-describe("effect", () => {
-  it("effect里的函数读取一个响应式变量时，可以被收集起来，并且当响应式变量发生变化，能够重新执行", () => {
+describe('effect', () => {
+  it('effect里的函数读取一个响应式变量时，可以被收集起来，并且当响应式变量发生变化，能够重新执行', () => {
     const user = reactive({
       age: 10,
     })
@@ -22,20 +22,20 @@ describe("effect", () => {
     expect(nextAge).toBe(12)
   })
 
-  it("当调用effect的时候应该return一个runner，runner就是传给effect的函数，并且runner执行结果是函数里的返回值", () => {
+  it('当调用effect的时候应该return一个runner，runner就是传给effect的函数，并且runner执行结果是函数里的返回值', () => {
     let foo = 10
     const runner = effect(() => {
       foo++
-      return "foo"
+      return 'foo'
     })
 
     expect(foo).toBe(11)
     const res = runner()
     expect(foo).toBe(12)
-    expect(res).toBe("foo")
+    expect(res).toBe('foo')
   })
 
-  it("effect支持schedule调度器功能", () => {
+  it('effect支持schedule调度器功能', () => {
     // 1. effect 第一次执行的时候，会执行fn，不执行scheduler
     // 2. 当响应式对象更新时，不会执行fn，而是执行scheduler
     // 3. 当执行runner时，会再次执行fn
@@ -49,7 +49,7 @@ describe("effect", () => {
       () => {
         dummy = obj.foo
       },
-      { scheduler }
+      { scheduler },
     )
     expect(scheduler).not.toHaveBeenCalled()
     expect(dummy).toBe(1)
@@ -62,7 +62,7 @@ describe("effect", () => {
     expect(dummy).toBe(2)
   })
 
-  it("stop停止触发依赖, 当调用stop时，onStop会执行", () => {
+  it('stop停止触发依赖, 当调用stop时，onStop会执行', () => {
     // 当调用stop后，响应式变量更新时，fn也不再执行
     // 调用runner后，fn才会执行
     // 当调用stop时，onStop会执行
@@ -75,7 +75,7 @@ describe("effect", () => {
       },
       {
         onStop,
-      }
+      },
     )
 
     obj.prop = 2
@@ -91,7 +91,7 @@ describe("effect", () => {
     expect(dummy).toBe(3)
   })
 
-  it("嵌套effect", () => {
+  it('嵌套effect', () => {
     const data = { foo: true, bar: true }
     const obj = reactive(data)
     let temp1, temp2
@@ -111,7 +111,7 @@ describe("effect", () => {
     expect(effectFn2).toHaveBeenCalledTimes(2)
   })
 
-  it.skip("嵌套effect", () => {
+  it.skip('嵌套effect', () => {
     const data = { foo: true, bar: true }
     const obj = reactive(data)
     let temp1, temp2

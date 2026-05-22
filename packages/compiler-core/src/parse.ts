@@ -1,4 +1,4 @@
-import { Element, Interpolation, NodeTypes, TagType, Text } from "./ast"
+import { Element, Interpolation, NodeTypes, TagType, Text } from './ast'
 
 interface Context {
   source: string
@@ -17,9 +17,9 @@ function parseChildren(context: Context, ancestors: Element[]) {
     let node
     // {{}}
     const s = context.source
-    if (s.startsWith("{{")) {
+    if (s.startsWith('{{')) {
       node = parseInterpolation(context)
-    } else if (s[0] === "<") {
+    } else if (s[0] === '<') {
       // element
       if (/[a-z]/i.test(s[1])) {
         node = parseElement(context, ancestors)
@@ -83,13 +83,10 @@ function parseTag(context: Context, tagType: TagType) {
 
 // 处理插值
 function parseInterpolation(context: Context): Interpolation {
-  const openDelimiter = "{{"
-  const closeDelimiter = "}}"
+  const openDelimiter = '{{'
+  const closeDelimiter = '}}'
 
-  const closeIndex = context.source.indexOf(
-    closeDelimiter,
-    openDelimiter.length
-  )
+  const closeIndex = context.source.indexOf(closeDelimiter, openDelimiter.length)
 
   advanceBy(context, openDelimiter.length)
 
@@ -112,11 +109,11 @@ function parseInterpolation(context: Context): Interpolation {
 function parseText(context: Context, ancestors: Element[]): Text {
   let endIndex = context.source.length
   const topElement = ancestors[ancestors.length - 1]
-  const endToken = ["{{", `</${topElement?.tag || ""}>`]
+  const endToken = ['{{', `</${topElement?.tag || ''}>`]
 
   const index = endToken
-    .map((token) => context.source.indexOf(token))
-    .filter((i) => i !== -1)
+    .map(token => context.source.indexOf(token))
+    .filter(i => i !== -1)
     .sort((a, b) => a - b)[0]
   if (index) {
     endIndex = index

@@ -1,10 +1,10 @@
-import { reactive } from "@min-vue/reactivity"
-import { watchEffect } from "../src/apiWatch"
-import { nextTick } from "../src/scheduler"
-import { vi } from "vitest"
+import { reactive } from '@min-vue/reactivity'
+import { watchEffect } from '../src/apiWatch'
+import { nextTick } from '../src/scheduler'
+import { vi } from 'vitest'
 
-describe("api: watch", () => {
-  it("effect", async () => {
+describe('api: watch', () => {
+  it('effect', async () => {
     const state = reactive({ count: 0 })
     let dummy
     watchEffect(() => {
@@ -17,7 +17,7 @@ describe("api: watch", () => {
     expect(dummy).toBe(1)
   })
 
-  it("stopping the watcher (effect)", async () => {
+  it('stopping the watcher (effect)', async () => {
     const state = reactive({ count: 0 })
     let dummy
     const stop: any = watchEffect(() => {
@@ -32,11 +32,11 @@ describe("api: watch", () => {
     expect(dummy).toBe(0)
   })
 
-  it("cleanup registration (effect)", async () => {
+  it('cleanup registration (effect)', async () => {
     const state = reactive({ count: 0 })
     const cleanup = vi.fn()
     let dummy
-    const stop: any = watchEffect((onCleanup) => {
+    const stop: any = watchEffect(onCleanup => {
       onCleanup(cleanup)
       dummy = state.count
     })

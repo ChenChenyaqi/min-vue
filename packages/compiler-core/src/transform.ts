@@ -1,9 +1,7 @@
-import { Element, Interpolation, NodeTypes, Text } from "./ast"
-import { TO_DISPLAY_STRING } from "./runtimeHelpers"
+import { Element, Interpolation, NodeTypes, Text } from './ast'
+import { TO_DISPLAY_STRING } from './runtimeHelpers'
 
-type MixinNode = Element &
-  Interpolation &
-  Text & { codegenNode?: Element; helpers: string[] }
+type MixinNode = Element & Interpolation & Text & { codegenNode?: Element; helpers: string[] }
 
 type Options = {
   nodeTransforms?: ((node: any, context: any) => {})[]

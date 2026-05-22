@@ -1,4 +1,4 @@
-import { ReactiveEffect } from "./effect"
+import { ReactiveEffect } from './effect'
 
 class ComputedRefImpl {
   private _dirty: boolean = true

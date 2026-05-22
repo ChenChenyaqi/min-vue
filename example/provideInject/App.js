@@ -1,34 +1,30 @@
-import {
-  h,
-  provide,
-  inject,
-} from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { h, provide, inject } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 const Provider = {
-  name: "Provider",
+  name: 'Provider',
   setup() {
-    provide("foo", "fooVal")
-    provide("bar", "barVal")
+    provide('foo', 'fooVal')
+    provide('bar', 'barVal')
   },
   render() {
-    return h("div", {}, [h("p", {}, "Provider"), h(Middle)])
+    return h('div', {}, [h('p', {}, 'Provider'), h(Middle)])
   },
 }
 
 const Middle = {
-  name: "Middle",
+  name: 'Middle',
   setup() {},
   render() {
-    return h("div", {}, [h("div", "Middle"), h(Consumer)])
+    return h('div', {}, [h('div', 'Middle'), h(Consumer)])
   },
 }
 
 const Consumer = {
-  name: "Consumer",
+  name: 'Consumer',
   setup() {
-    const foo = inject("foo")
-    const bar = inject("bar")
-    const baz = inject("baz", "bazVal")
+    const foo = inject('foo')
+    const bar = inject('bar')
+    const baz = inject('baz', 'bazVal')
     return {
       foo,
       bar,
@@ -36,14 +32,14 @@ const Consumer = {
     }
   },
   render() {
-    return h("div", {}, `Consumer: - ${this.foo} - ${this.bar} - ${this.baz}`)
+    return h('div', {}, `Consumer: - ${this.foo} - ${this.bar} - ${this.baz}`)
   },
 }
 
 export const App = {
-  name: "App",
+  name: 'App',
   render() {
-    return h("div", {}, [h(Provider)])
+    return h('div', {}, [h(Provider)])
   },
   setup() {},
 }

@@ -1,5 +1,5 @@
-import { defineConfig } from "vitest/config"
-import path from "path"
+import { defineConfig } from 'vitest/config'
+import path from 'path'
 
 export default defineConfig({
   test: {
@@ -9,7 +9,7 @@ export default defineConfig({
     alias: [
       {
         find: /@min-vue\/(\w*)/,
-        replacement: path.resolve(__dirname, "packages") + "/$1/src",
+        replacement: path.resolve(__dirname, 'packages') + '/$1/src',
       },
     ],
   },

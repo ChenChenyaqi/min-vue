@@ -1,10 +1,6 @@
-import {
-  CREATE_ELEMENT_VNODE,
-  TO_DISPLAY_STRING,
-  helperMapName,
-} from "./runtimeHelpers"
-import { Element, Interpolation, NodeTypes, Text } from "./ast"
-import { isString } from "@min-vue/shared"
+import { CREATE_ELEMENT_VNODE, TO_DISPLAY_STRING, helperMapName } from './runtimeHelpers'
+import { Element, Interpolation, NodeTypes, Text } from './ast'
+import { isString } from '@min-vue/shared'
 
 export function generate(ast) {
   const context = createCodegenContext()
@@ -13,15 +9,15 @@ export function generate(ast) {
   // 前导码
   genFunctionPreamble(ast, context)
 
-  const functionName = "render"
-  const args = ["_ctx", "_cache"]
-  const signature = args.join(", ")
+  const functionName = 'render'
+  const args = ['_ctx', '_cache']
+  const signature = args.join(', ')
 
   push(`function ${functionName}(${signature}){`)
 
-  push("return ")
+  push('return ')
   genNode(ast.codegenNode, context)
-  push("}")
+  push('}')
 
   return {
     code: context.code,
@@ -30,14 +26,12 @@ export function generate(ast) {
 
 function genFunctionPreamble(ast, context) {
   const { push } = context
-  const VueBinging = "Vue"
-  const aliasHelper = (s) => `${helperMapName[s]}: _${helperMapName[s]}`
+  const VueBinging = 'Vue'
+  const aliasHelper = s => `${helperMapName[s]}: _${helperMapName[s]}`
   if (ast.helpers.length) {
-    push(
-      `const { ${ast.helpers.map(aliasHelper).join(", ")} } = ${VueBinging};`
-    )
+    push(`const { ${ast.helpers.map(aliasHelper).join(', ')} } = ${VueBinging};`)
   }
-  push("return ")
+  push('return ')
 }
 
 function genNode(node, context) {
@@ -80,7 +74,7 @@ function genElement(node: Element, context) {
   const { tag, children, props } = node
   push(`${helper(CREATE_ELEMENT_VNODE)}(`)
   genNodeList(genNullable([tag, props, children]), context)
-  push(")")
+  push(')')
 }
 
 function genNodeList(nodes: any[], context) {
@@ -93,13 +87,13 @@ function genNodeList(nodes: any[], context) {
       genNode(node, context)
     }
     if (i < nodes.length - 1) {
-      push(", ")
+      push(', ')
     }
   }
 }
 
 function genNullable(args: any[]) {
-  return args.map((arg) => arg || "null")
+  return args.map(arg => arg || 'null')
 }
 
 function genText(node: Text, context) {
@@ -111,17 +105,17 @@ function genInterpolation(node: Interpolation, context) {
   const { push, helper } = context
   push(`${helper(TO_DISPLAY_STRING)}(`)
   genNode(node.content, context)
-  push(")")
+  push(')')
 }
 
-function genExpression(node: Interpolation["content"], context) {
+function genExpression(node: Interpolation['content'], context) {
   const { push } = context
   push(`${node.content}`)
 }
 
 function createCodegenContext() {
   const context = {
-    code: "",
+    code: '',
     push(source: string) {
       context.code += source
     },

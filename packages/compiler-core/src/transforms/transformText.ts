@@ -1,5 +1,5 @@
-import { Element, NodeTypes } from "../ast"
-import { isText } from "../utils"
+import { Element, NodeTypes } from '../ast'
+import { isText } from '../utils'
 
 export function transformText(node: Element) {
   if (node.type === NodeTypes.ELEMENT) {
@@ -18,7 +18,7 @@ export function transformText(node: Element) {
                   children: [child],
                 }
               }
-              currentContainer.children.push(" + ")
+              currentContainer.children.push(' + ')
               currentContainer.children.push(nextChild)
               children.splice(j, 1)
               j--

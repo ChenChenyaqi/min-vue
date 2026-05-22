@@ -1,14 +1,14 @@
-import { effect } from "../src/effect"
-import { reactive } from "../src/reactive"
-import { ref, isRef, unRef, proxyRefs, toRef, toRefs } from "../src/ref"
-import { toRef as _toRef, isRef as _isRef } from "vue"
-describe("ref", () => {
-  it("happy path", () => {
+import { effect } from '../src/effect'
+import { reactive } from '../src/reactive'
+import { ref, isRef, unRef, proxyRefs, toRef, toRefs } from '../src/ref'
+import { toRef as _toRef, isRef as _isRef } from 'vue'
+describe('ref', () => {
+  it('happy path', () => {
     const a = ref(1)
     expect(a.value).toBe(1)
   })
 
-  it("should be reactive", () => {
+  it('should be reactive', () => {
     const a = ref(1)
     let dummy
     let calls = 0
@@ -29,7 +29,7 @@ describe("ref", () => {
     expect(dummy).toBe(2)
   })
 
-  it("should make nested properties reactive", () => {
+  it('should make nested properties reactive', () => {
     const a = ref({
       count: 1,
     })
@@ -42,7 +42,7 @@ describe("ref", () => {
     expect(dummy).toBe(2)
   })
 
-  it("isRef", () => {
+  it('isRef', () => {
     const a = ref(1)
     const b = ref({ c: 1, d: { e: 2 } })
     const user = reactive({ age: 1 })
@@ -54,40 +54,40 @@ describe("ref", () => {
     expect(isRef(b.value.d)).toBe(false)
   })
 
-  it("unRef", () => {
+  it('unRef', () => {
     const a = ref(1)
     expect(unRef(a)).toBe(1)
     expect(unRef(1)).toBe(1)
   })
 
-  it("proxyRefs", () => {
+  it('proxyRefs', () => {
     const user = {
       age: ref(10),
-      name: "xiaoming",
+      name: 'xiaoming',
     }
 
     const proxyUser = proxyRefs(user)
     expect(user.age.value).toBe(10)
     expect(proxyUser.age).toBe(10)
-    expect(proxyUser.name).toBe("xiaoming")
+    expect(proxyUser.name).toBe('xiaoming')
 
     proxyUser.age = 11
     expect(proxyUser.age).toBe(11)
     expect(user.age.value).toBe(11)
   })
 
-  it("toRef", () => {
-    const name = "jack"
+  it('toRef', () => {
+    const name = 'jack'
     const nameRef = toRef(name)
     expect(isRef(nameRef)).toBe(true)
-    nameRef.value = "mick"
-    expect(nameRef.value).toBe("mick")
-    expect(name).toBe("jack")
+    nameRef.value = 'mick'
+    expect(nameRef.value).toBe('mick')
+    expect(name).toBe('jack')
 
     const a = reactive({
       x: 1,
     })
-    const x = toRef(a, "x")
+    const x = toRef(a, 'x')
     expect(isRef(x)).toBe(true)
     expect(x.value).toBe(1)
     // source -> proxy
@@ -110,19 +110,19 @@ describe("ref", () => {
 
     // should keep ref
     const r = { x: ref(1) }
-    expect(toRef(r, "x")).toBe(r.x)
+    expect(toRef(r, 'x')).toBe(r.x)
   })
 
-  it("real toRef", () => {
-    const name = "jack"
+  it('real toRef', () => {
+    const name = 'jack'
     const nameRef = _toRef(name)
     expect(_isRef(nameRef)).toBe(true)
-    nameRef.value = "mick"
-    expect(nameRef.value).toBe("mick")
-    expect(name).toBe("jack")
+    nameRef.value = 'mick'
+    expect(nameRef.value).toBe('mick')
+    expect(name).toBe('jack')
   })
 
-  it("toRefs", () => {
+  it('toRefs', () => {
     const a = reactive({
       x: 1,
       y: 2,

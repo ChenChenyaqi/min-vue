@@ -1,12 +1,12 @@
-import { h, ref } from "../../packages/vue/dist/guide-min-vue.esm.js"
-import ComponentToComponent from "./ComponentToComponent.js"
+import { h, ref } from '../../packages/vue/dist/guide-min-vue.esm.js'
+import ComponentToComponent from './ComponentToComponent.js'
 
 export const App = {
-  name: "App",
+  name: 'App',
   setup() {
-    const msg = ref("hello world")
+    const msg = ref('hello world')
     const handleClick = () => {
-      msg.value = "你好 世界!"
+      msg.value = '你好 世界!'
     }
 
     const count = ref(1)
@@ -21,11 +21,11 @@ export const App = {
     }
   },
   render() {
-    return h("div", {}, [
+    return h('div', {}, [
       h(ComponentToComponent, { msg: this.msg }),
-      h("button", { onClick: this.handleClick }, "click me!"),
-      h("hr"),
-      h("div", { onClick: this.handleClick2 }, "App自身的属性: " + this.count),
+      h('button', { onClick: this.handleClick }, 'click me!'),
+      h('hr'),
+      h('div', { onClick: this.handleClick2 }, 'App自身的属性: ' + this.count),
     ])
   },
 }

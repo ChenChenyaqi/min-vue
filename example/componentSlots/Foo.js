@@ -1,4 +1,4 @@
-import { h, renderSlots } from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { h, renderSlots } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 export const Foo = {
   setup(props, { emit }) {
@@ -6,10 +6,10 @@ export const Foo = {
   },
 
   render() {
-    return h("div", {}, [
-      renderSlots(this.$slots, "header", { haha: "haha" }),
-      h("p", "foo"),
-      renderSlots(this.$slots, "footer"),
+    return h('div', {}, [
+      renderSlots(this.$slots, 'header', { haha: 'haha' }),
+      h('p', 'foo'),
+      renderSlots(this.$slots, 'footer'),
     ])
   },
 }

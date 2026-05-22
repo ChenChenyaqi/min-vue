@@ -1,12 +1,12 @@
-import { h, ref } from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { h, ref } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 export default {
-  name: "ArrayToText",
+  name: 'ArrayToText',
   setup() {
     const flag = ref(true)
 
     const handleClick = () => {
-      console.log("ArrayToText click")
+      console.log('ArrayToText click')
       flag.value = !flag.value
     }
     return {
@@ -16,11 +16,11 @@ export default {
   },
   render() {
     return this.flag
-      ? h("div", { onClick: this.handleClick }, [
-          h("div", {}, "我是一个div1"),
-          h("div", {}, "我是一个div2"),
-          h("div", {}, "我是一个div3"),
+      ? h('div', { onClick: this.handleClick }, [
+          h('div', {}, '我是一个div1'),
+          h('div', {}, '我是一个div2'),
+          h('div', {}, '我是一个div3'),
         ])
-      : h("div", {}, "我是文本")
+      : h('div', {}, '我是文本')
   },
 }

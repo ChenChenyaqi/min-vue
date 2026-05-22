@@ -1,6 +1,6 @@
-import { convertStringToHTMLElement } from "@min-vue/shared"
-import { Component } from "./h"
-import { createVNode } from "./vnode"
+import { convertStringToHTMLElement } from '@min-vue/shared'
+import { Component } from './h'
+import { createVNode } from './vnode'
 
 export function createAppAPI(render) {
   return function createApp(rootComponent: Component) {

@@ -1,4 +1,4 @@
-import { getCurrentInstance } from "./component"
+import { getCurrentInstance } from './component'
 
 export function provide(key, value) {
   const currentInstance = getCurrentInstance()
@@ -18,8 +18,5 @@ export function inject(key, defaultVal) {
   if (!currentInstance) return
   const parentProvides = currentInstance.parent?.provides
   if (parentProvides)
-    return (
-      parentProvides[key] ||
-      (typeof defaultVal === "function" ? defaultVal() : defaultVal)
-    )
+    return parentProvides[key] || (typeof defaultVal === 'function' ? defaultVal() : defaultVal)
 }

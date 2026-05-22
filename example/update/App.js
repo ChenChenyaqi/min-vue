@@ -1,7 +1,7 @@
-import { h, ref } from "../../packages/vue/dist/guide-min-vue.esm.js"
+import { h, ref } from '../../packages/vue/dist/guide-min-vue.esm.js'
 
 export const App = {
-  name: "App",
+  name: 'App',
   setup() {
     const count = ref(0)
 
@@ -16,20 +16,20 @@ export const App = {
   },
   render() {
     return h(
-      "div",
+      'div',
       {
-        id: "root",
+        id: 'root',
       },
       [
-        h("div", {}, "count: " + this.count), // 依赖收集
+        h('div', {}, 'count: ' + this.count), // 依赖收集
         h(
-          "button",
+          'button',
           {
             onClick: this.handleClick,
           },
-          "click me!"
+          'click me!',
         ),
-      ]
+      ],
     )
   },
 }
